@@ -49,7 +49,7 @@
                 "name": "server_ip",
                 "type": "string",
                 "ask": {
-                    "en": "[Client only] What is the Ip of the Nomad server node ?"
+                    "en": "[Client only] What is the IP of the Nomad server node ?"
                 },
                 "example": "192.168.1.100",
                 "optional": true
