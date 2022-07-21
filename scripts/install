@@ -34,7 +34,7 @@ app=$YNH_APP_INSTANCE_NAME
 
 lxc_bridge="lxcbr0"
 plage_ip="10.1.44"
-main_iface=$(sudo ip route | grep default | awk '{print $5;}')
+main_iface=$(ip route | grep default | awk '{print $5;}')
 
 #=================================================
 # CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS

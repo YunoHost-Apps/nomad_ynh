@@ -110,7 +110,7 @@ then
 
 	lxc_bridge=$(ynh_app_setting_get --app=$app --key=lxc_bridge)
 	plage_ip=$(ynh_app_setting_get --app=$app --key=plage_ip)
-	main_iface=$(sudo ip route | grep default | awk '{print $5;}')
+	main_iface=$(ip route | grep default | awk '{print $5;}')
 	ynh_app_setting_set --app=$app --key=main_iface --value=$main_iface
 	ynh_add_config --template="../conf/lxc_bridge" --destination="/etc/network/interfaces.d/$lxc_bridge"
 	ifup $lxc_bridge --interfaces=/etc/network/interfaces.d/$lxc_bridge
