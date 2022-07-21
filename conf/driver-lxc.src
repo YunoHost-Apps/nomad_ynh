@@ -1,0 +1,7 @@
+SOURCE_URL=https://github.com/hashicorp/nomad-driver-lxc/archive/7ceb969ba7bf4e4fae14856243892b1d51a37d14.tar.gz
+SOURCE_SUM=b2b84436e4feb99b39414b4faa3c40f03c433c144832ece1d90dd6ddb870aa95
+SOURCE_SUM_PRG=sha256sum
+SOURCE_FORMAT=tar.gz
+SOURCE_IN_SUBDIR=true
+SOURCE_FILENAME=
+SOURCE_EXTRACT=true
