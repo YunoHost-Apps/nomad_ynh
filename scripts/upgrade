@@ -185,7 +185,7 @@ if [ "$node_type" == "server" ]
 then
 	needs_exposed_ports="$serf_port $needs_exposed_ports"
 fi
-yunohost service add $app --log="/var/log/$app/$app.log" --needs_exposed_ports="$needs_exposed_ports"
+yunohost service add $app --log="/var/log/$app/$app.log" --needs_exposed_ports $needs_exposed_ports
 
 #=================================================
 # START SYSTEMD SERVICE
