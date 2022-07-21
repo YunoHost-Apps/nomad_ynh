@@ -15,46 +15,21 @@ If you don't have YunoHost, please consult [the guide](https://yunohost.org/#/in
 
 ## Overview
 
-Some long and extensive description of what the app is and does, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-
-### Features
-
-- Ut enim ad minim veniam, quis nostrud exercitation ullamco ;
-- Laboris nisi ut aliquip ex ea commodo consequat ;
-- Duis aute irure dolor in reprehenderit in voluptate ;
-- Velit esse cillum dolore eu fugiat nulla pariatur ;
-- Excepteur sint occaecat cupidatat non proident, sunt in culpa."
+Nomad is a simple and flexible workload orchestrator to deploy and manage containers ([docker](https://www.nomadproject.io/docs/drivers/docker.html), [podman](https://www.nomadproject.io/docs/drivers/podman)), non-containerized applications ([executable](https://www.nomadproject.io/docs/drivers/exec.html), [Java](https://www.nomadproject.io/docs/drivers/java)), and virtual machines ([qemu](https://www.nomadproject.io/docs/drivers/qemu.html)) across on-prem and clouds at scale.
 
 
-**Shipped version:** 1.0~ynh1
-
-**Demo:** https://demo.example.com
+**Shipped version:** 1.3.2~ynh1
 
 ## Screenshots
 
+![Screenshot of Nomad](./doc/screenshots/assets.png)
 ![Screenshot of Nomad](./doc/screenshots/example.jpg)
-
-## Disclaimers / important information
-
-* Any known limitations, constrains or stuff not working, such as (but not limited to):
-    * requiring a full dedicated domain ?
-    * architectures not supported ?
-    * not-working single-sign on or LDAP integration ?
-    * the app requires an important amount of RAM / disk / .. to install or to work properly
-    * etc...
-
-* Other infos that people should be aware of, such as:
-    * any specific step to perform after installing (such as manually finishing the install, specific admin credentials, ...)
-    * how to configure / administrate the application if it ain't obvious
-    * upgrade process / specificities / things to be aware of ?
-    * security considerations ?
 
 ## Documentation and resources
 
-* Official app website: <https://example.com>
-* Official user documentation: <https://yunohost.org/apps>
-* Official admin documentation: <https://yunohost.org/packaging_apps>
-* Upstream app code repository: <https://some.forge.com/example/example>
+* Official app website: <https://www.nomadproject.io/>
+* Official admin documentation: <https://www.nomadproject.io/docs>
+* Upstream app code repository: <https://github.com/hashicorp/nomad>
 * YunoHost documentation for this app: <https://yunohost.org/app_nomad>
 * Report a bug: <https://github.com/YunoHost-Apps/nomad_ynh/issues>
 
