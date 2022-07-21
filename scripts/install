@@ -80,9 +80,11 @@ ynh_app_setting_set --app=$app --key=serf_port --value=$serf_port
 # Open the port
 ynh_script_progression --message="Configuring firewall..."
 ynh_exec_warn_less yunohost firewall allow --no-upnp TCP $rpc_port
+needs_exposed_ports="$rpc_port"
 if [ "$node_type" == "server" ]
 then
 	ynh_exec_warn_less yunohost firewall allow --no-upnp TCP $serf_port
+	needs_exposed_ports="$serf_port $needs_exposed_ports"
 fi
 
 #=================================================
@@ -220,7 +222,7 @@ ynh_use_logrotate
 #=================================================
 ynh_script_progression --message="Integrating service in YunoHost..."
 
-yunohost service add $app --log="/var/log/$app/$app.log"
+yunohost service add $app --log="/var/log/$app/$app.log" --needs_exposed_ports="$needs_exposed_ports"
 
 #=================================================
 # START SYSTEMD SERVICE
