@@ -1,9 +1,9 @@
-;; Test complet server
+;; Test complet client
 	; Manifest
 		domain="domain.tld"
 		is_public=1
-		node_type="server"
-		server_ip="none..."
+		node_type="client"
+		server_ip="192.168.1.100"
 	; Checks
 		pkg_linter=1
 		setup_sub_dir=0
@@ -17,12 +17,12 @@
 		multi_instance=0
 		port_already_use=0
 		change_url=1
-;; Test complet client
+;; Test complet server
 	; Manifest
 		domain="domain.tld"
 		is_public=1
-		node_type="client"
-		server_ip="192.168.1.100"
+		node_type="server"
+		server_ip="none..."
 	; Checks
 		pkg_linter=1
 		setup_sub_dir=0
