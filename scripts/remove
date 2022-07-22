@@ -54,17 +54,6 @@ ynh_script_progression --message="Removing logrotate configuration..."
 ynh_remove_logrotate
 
 #=================================================
-# REMOVE DATA DIR
-#=================================================
-
-# Remove the data directory if --purge option is used
-if [ "${YNH_APP_PURGE:-0}" -eq 1 ]
-then
-	ynh_script_progression --message="Removing app data directory..."
-	ynh_secure_remove --file="$datadir"
-fi
-
-#=================================================
 # REMOVE NGINX CONFIGURATION
 #=================================================
 ynh_script_progression --message="Removing NGINX web server configuration..."
@@ -93,7 +82,7 @@ then
 
 	lxc_bridge=$(ynh_app_setting_get --app=$app --key=lxc_bridge)
 
-	systemctl stop lxc-net --quiet
+	ynh_systemd_action --service_name=lxc-net --action="stop"
 	systemctl disable lxc-net --quiet
 	ynh_secure_remove --file="/etc/default/lxc-net"
 	ynh_secure_remove --file="/etc/lxc/default.conf"
@@ -108,6 +97,17 @@ ynh_script_progression --message="Removing dependencies..."
 
 # Remove metapackage and its dependencies
 ynh_remove_app_dependencies
+
+#=================================================
+# REMOVE DATA DIR
+#=================================================
+
+# Remove the data directory if --purge option is used
+if [ "${YNH_APP_PURGE:-0}" -eq 1 ]
+then
+	ynh_script_progression --message="Removing app data directory..."
+	ynh_secure_remove --file="$datadir"
+fi
 
 #=================================================
 # SPECIFIC REMOVE

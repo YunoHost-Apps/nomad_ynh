@@ -193,10 +193,7 @@ then
 	ynh_add_config --template="../conf/default.conf" --destination="/etc/lxc/default.conf"
 	ynh_add_config --template="../conf/lxc-net" --destination="/etc/default/lxc-net"
 	systemctl enable lxc-net --quiet
-	systemctl start lxc-net --quiet
-	#iptables -A FORWARD -i $lxc_bridge -o $main_iface -j ACCEPT
-	#iptables -A FORWARD -i $main_iface -o $lxc_bridge -j ACCEPT
-	#iptables -t nat -A POSTROUTING -s $plage_ip.0/24 -j MASQUERADE
+	ynh_systemd_action --service_name=lxc-net --action="restart" --line_match="Started LXC network bridge" --log_path="systemd"
 fi
 
 #=================================================
