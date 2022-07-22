@@ -113,8 +113,7 @@ then
 	main_iface=$(ip route | grep default | awk '{print $5;}')
 	ynh_app_setting_set --app=$app --key=main_iface --value=$main_iface
 
-	echo "bind-interfaces
-except-interface=lxdbr0" > /etc/dnsmasq.d/lxd
+	ynh_add_config --template="../conf/dnsmasq-lxd" --destination="/etc/dnsmasq.d/lxd"
 	systemctl restart dnsmasq
 
 	ynh_add_config --template="../conf/lxc-net" --destination="/etc/default/lxc-net"
