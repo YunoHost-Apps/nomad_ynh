@@ -121,7 +121,6 @@ then
 	mv -f $tempdir/nomad-driver-lxc $datadir/plugins/nomad-driver-lxc
 
 	ynh_secure_remove --file="$tempdir"
-	ynh_remove_go
 fi
 
 #=================================================
