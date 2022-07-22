@@ -1,6 +1,0 @@
-auto __LXC_BRIDGE__
-iface __LXC_BRIDGE__ inet static
-        address __PLAGE_IP__.1/24
-        bridge_ports none
-        bridge_fd 0
-        bridge_maxwait 0

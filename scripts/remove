@@ -72,14 +72,6 @@ ynh_script_progression --message="Removing NGINX web server configuration..."
 ynh_remove_nginx_config
 
 #=================================================
-# REMOVE DEPENDENCIES
-#=================================================
-ynh_script_progression --message="Removing dependencies..."
-
-# Remove metapackage and its dependencies
-ynh_remove_app_dependencies
-
-#=================================================
 # CLOSE A PORT
 #=================================================
 
@@ -100,9 +92,19 @@ then
 
 	lxc_bridge=$(ynh_app_setting_get --app=$app --key=lxc_bridge)
 
-	ifdown --force $lxc_bridge
-	ynh_secure_remove --file="/etc/network/interfaces.d/$lxc_bridge"
+	systemctl stop lxc-net --quiet
+	systemctl disable lxc-net --quiet
+	ynh_secure_remove --file="/etc/default/lxc-net"
+	ynh_secure_remove --file="/etc/lxc/default.conf"
 fi
+
+#=================================================
+# REMOVE DEPENDENCIES
+#=================================================
+ynh_script_progression --message="Removing dependencies..."
+
+# Remove metapackage and its dependencies
+ynh_remove_app_dependencies
 
 #=================================================
 # SPECIFIC REMOVE

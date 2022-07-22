@@ -187,11 +187,17 @@ then
 	chmod 400 "$config_path/client.hcl"
 	chown $app:$app "$config_path/client.hcl"
 
-	ynh_add_config --template="../conf/lxc_bridge" --destination="/etc/network/interfaces.d/$lxc_bridge"
-	ifup $lxc_bridge --interfaces=/etc/network/interfaces.d/$lxc_bridge
-	iptables -A FORWARD -i $lxc_bridge -o $main_iface -j ACCEPT
-	iptables -A FORWARD -i $main_iface -o $lxc_bridge -j ACCEPT
-	iptables -t nat -A POSTROUTING -s $plage_ip.0/24 -j MASQUERADE
+	echo "bind-interfaces
+except-interface=lxdbr0" > /etc/dnsmasq.d/lxd
+	systemctl restart dnsmasq
+
+	ynh_add_config --template="../conf/default.conf" --destination="/etc/lxc/default.conf"
+	ynh_add_config --template="../conf/lxc-net" --destination="/etc/default/lxc-net"
+	systemctl enable lxc-net --quiet
+	systemctl start lxc-net --quiet
+	#iptables -A FORWARD -i $lxc_bridge -o $main_iface -j ACCEPT
+	#iptables -A FORWARD -i $main_iface -o $lxc_bridge -j ACCEPT
+	#iptables -t nat -A POSTROUTING -s $plage_ip.0/24 -j MASQUERADE
 fi
 
 #=================================================
