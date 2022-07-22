@@ -111,7 +111,6 @@ job "job-stretch" {
     }
   }
 }
-}
 ```
 
 ### Debian Buster
@@ -140,7 +139,6 @@ job "job-buster" {
       }
     }
   }
-}
 }
 ```
 
