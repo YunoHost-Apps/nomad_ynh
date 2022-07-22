@@ -41,7 +41,7 @@ fi
 #=================================================
 ynh_script_progression --message="Stopping and removing the systemd service..."
 
-nomad node drain -self -enable
+ynh_exec_warn_less nomad node drain -self -enable
 # Remove the dedicated systemd config
 ynh_remove_systemd_config
 
