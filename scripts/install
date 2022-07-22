@@ -8,6 +8,7 @@
 
 source _common.sh
 source ynh_install_go
+source ynh_apps
 source /usr/share/yunohost/helpers
 
 #=================================================
@@ -32,10 +33,6 @@ server_ip=$YNH_APP_ARG_SERVER_IP
 
 app=$YNH_APP_INSTANCE_NAME
 
-lxc_bridge="lxcbr0"
-plage_ip="10.1.44"
-main_iface=$(ip route | grep default | awk '{print $5;}')
-
 #=================================================
 # CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
 #=================================================
@@ -53,9 +50,6 @@ ynh_app_setting_set --app=$app --key=domain --value=$domain
 ynh_app_setting_set --app=$app --key=path --value=$path_url
 ynh_app_setting_set --app=$app --key=node_type --value=$node_type
 ynh_app_setting_set --app=$app --key=server_ip --value=$server_ip
-ynh_app_setting_set --app=$app --key=lxc_bridge --value=$lxc_bridge
-ynh_app_setting_set --app=$app --key=plage_ip --value=$plage_ip
-ynh_app_setting_set --app=$app --key=main_iface --value=$main_iface
 
 #=================================================
 # STANDARD MODIFICATIONS
@@ -95,6 +89,7 @@ ynh_script_progression --message="Installing dependencies..."
 if [ "$node_type" == "client" ]
 then
 	ynh_install_app_dependencies $client_pkg_dependencies
+	ynh_install_apps --apps="$ynh_app_dependencies"
 	ynh_install_go --go_version=$go_version
 fi
 ynh_install_extra_app_dependencies --repo="deb https://apt.releases.hashicorp.com $(lsb_release -cs) main" --package="$pkg_dependencies" --key="https://apt.releases.hashicorp.com/gpg"
@@ -141,7 +136,7 @@ then
 	ynh_script_progression --message="Building LXC driver..."
 
 	tempdir="$(mktemp -d)"
-	ynh_setup_source --dest_dir="$tempdir" --source_id="driver-lxc"
+	ynh_setup_source --dest_dir="$tempdir" --source_id="driver-lxd"
 
 	pushd $tempdir
 		final_path=$tempdir
@@ -151,7 +146,7 @@ then
 		$ynh_go build
 	popd
 
-	mv -f $tempdir/nomad-driver-lxc $datadir/plugins/nomad-driver-lxc
+	mv -f $tempdir/nomad-driver-lxd $datadir/plugins/nomad-driver-lxd
 
 	ynh_secure_remove --file="$tempdir"
 fi
@@ -186,13 +181,16 @@ then
 	chmod 400 "$config_path/client.hcl"
 	chown $app:$app "$config_path/client.hcl"
 
-	ynh_add_config --template="../conf/dnsmasq-lxd" --destination="/etc/dnsmasq.d/lxd"
-	systemctl restart dnsmasq
+	ynh_add_config --template="../conf/lxd.hcl" --destination="$config_path/lxd.hcl"
+	chmod 400 "$config_path/lxd.hcl"
+	chown $app:$app "$config_path/lxd.hcl"
 
-	ynh_add_config --template="../conf/default.conf" --destination="/etc/lxc/default.conf"
-	ynh_add_config --template="../conf/lxc-net" --destination="/etc/default/lxc-net"
-	systemctl enable lxc-net --quiet
-	ynh_systemd_action --service_name=lxc-net --action="restart" --line_match="Started LXC network bridge" --log_path="systemd"
+	lxd init --auto --storage-backend=dir
+	usermod -a -G lxd $app
+	if ! `su $app -s /bin/bash -c "lxc remote list" | grep "https://devbaseimgs.yunohost.org" 1>/dev/null 2>&1`
+	then
+		su $app -s /bin/bash -c "lxc remote add yunohost https://devbaseimgs.yunohost.org --public --accept-certificate"
+	fi
 fi
 
 #=================================================

@@ -1,0 +1,7 @@
+SOURCE_URL=https://github.com/yalh76/nomad-driver-lxd/archive/8b1eccb398f7dc038cd6362b3daf4a586b5d4aba.tar.gz
+SOURCE_SUM=c029ed9ac8929ce6a17603ed4466c37ffe90c6fb21ded89a2903d7a2e9795e33
+SOURCE_SUM_PRG=sha256sum
+SOURCE_FORMAT=tar.gz
+SOURCE_IN_SUBDIR=true
+SOURCE_FILENAME=
+SOURCE_EXTRACT=true

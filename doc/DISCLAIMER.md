@@ -11,7 +11,7 @@ job "job-busybox" {
 
   group "group-busybox" {
     task "task-busybox" {
-      driver = "lxc"
+      driver = "lxd"
 
       config {
         log_level = "info"
@@ -39,7 +39,7 @@ job "job-debian" {
 
   group "group-debian" {
     task "task-debian" {
-      driver = "lxc"
+      driver = "lxd"
 
       config {
         log_level = "info"
@@ -67,7 +67,7 @@ job "job-stretch" {
 
   group "group-stretch" {
     task "task-stretch" {
-      driver = "lxc"
+      driver = "lxd"
 
       config {
         log_level = "info"
@@ -97,7 +97,7 @@ job "job-buster" {
 
   group "group-buster" {
     task "task-buster" {
-      driver = "lxc"
+      driver = "lxd"
 
       config {
         log_level = "info"
@@ -127,7 +127,7 @@ job "job-download-buster" {
 
   group "group-download-buster" {
     task "task-download-buster" {
-      driver = "lxc"
+      driver = "lxd"
 
       config {
         log_level = "info"
@@ -156,7 +156,7 @@ job "job-download-bullseye" {
 
   group "group-download-bullseye" {
     task "task-download-bullseye" {
-      driver = "lxc"
+      driver = "lxd"
 
       config {
         log_level = "info"

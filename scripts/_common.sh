@@ -7,9 +7,12 @@
 # dependencies used by the app
 pkg_dependencies="nomad"
 
-client_pkg_dependencies="pkg-config lxc-dev lxc lxc-templates"
+client_pkg_dependencies=""
+# lxc-templates
 
 go_version=1.15
+
+ynh_app_dependencies="lxd"
 
 #=================================================
 # PERSONAL HELPERS

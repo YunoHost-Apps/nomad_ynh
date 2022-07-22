@@ -7,6 +7,7 @@
 #=================================================
 
 source _common.sh
+source ynh_apps
 source /usr/share/yunohost/helpers
 
 #=================================================
@@ -77,19 +78,6 @@ then
 	ynh_exec_warn_less yunohost firewall disallow TCP $serf_port
 fi
 
-if [ "$node_type" == "client" ]
-then
-
-	lxc_bridge=$(ynh_app_setting_get --app=$app --key=lxc_bridge)
-
-	ynh_systemd_action --service_name=lxc-net --action="stop"
-	systemctl disable lxc-net --quiet
-	ynh_secure_remove --file="/etc/default/lxc-net"
-	ynh_secure_remove --file="/etc/lxc/default.conf"
-	ynh_secure_remove --file="/etc/dnsmasq.d/lxd"
-	systemctl restart dnsmasq
-fi
-
 #=================================================
 # REMOVE DEPENDENCIES
 #=================================================
@@ -97,6 +85,7 @@ ynh_script_progression --message="Removing dependencies..."
 
 # Remove metapackage and its dependencies
 ynh_remove_app_dependencies
+ynh_remove_apps
 ynh_remove_go
 
 #=================================================

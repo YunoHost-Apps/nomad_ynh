@@ -74,6 +74,7 @@ ynh_script_progression --message="Reinstalling dependencies..."
 if [ "$node_type" == "client" ]
 then
 	ynh_install_app_dependencies $client_pkg_dependencies
+	ynh_install_apps --apps="$ynh_app_dependencies"
 fi
 ynh_install_extra_app_dependencies --repo="deb https://apt.releases.hashicorp.com $(lsb_release -cs) main" --package="$pkg_dependencies" --key="https://apt.releases.hashicorp.com/gpg"
 
@@ -107,19 +108,12 @@ fi
 
 if [ "$node_type" == "client" ]
 then
-
-	lxc_bridge=$(ynh_app_setting_get --app=$app --key=lxc_bridge)
-	plage_ip=$(ynh_app_setting_get --app=$app --key=plage_ip)
-	main_iface=$(ip route | grep default | awk '{print $5;}')
-	ynh_app_setting_set --app=$app --key=main_iface --value=$main_iface
-
-	ynh_add_config --template="../conf/dnsmasq-lxd" --destination="/etc/dnsmasq.d/lxd"
-	systemctl restart dnsmasq
-
-	ynh_add_config --template="../conf/lxc-net" --destination="/etc/default/lxc-net"
-	ynh_add_config --template="../conf/default.conf" --destination="/etc/lxc/default.conf"
-	systemctl enable lxc-net --quiet
-	ynh_systemd_action --service_name=lxc-net --action="restart" --line_match="Started LXC network bridge" --log_path="systemd"
+	lxd init --auto --storage-backend=dir
+	usermod -a -G lxd $app	
+	if ! `su $app -s /bin/bash -c "lxc remote list" | grep "https://devbaseimgs.yunohost.org" 1>/dev/null 2>&1`
+	then
+		su $app -s /bin/bash -c "lxc remote add yunohost https://devbaseimgs.yunohost.org --public --accept-certificate"
+	fi
 fi
 
 #=================================================
