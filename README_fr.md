@@ -23,7 +23,6 @@ Nomad is a simple and flexible workload orchestrator to deploy and manage contai
 ## Captures d'écran
 
 ![Capture d'écran de Nomad](./doc/screenshots/assets.png)
-![Capture d'écran de Nomad](./doc/screenshots/example.jpg)
 
 ## Avertissements / informations importantes
 
