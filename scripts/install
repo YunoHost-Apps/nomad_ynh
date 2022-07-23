@@ -210,11 +210,13 @@ then
 		chmod 400 "$config_path/driver-lxd.hcl"
 		chown $app:$app "$config_path/driver-lxd.hcl"
 
-		lxd init --auto --storage-backend=dir
-		usermod -a -G lxd $app
-		if ! `su $app -s /bin/bash -c "lxc remote list" | grep "https://devbaseimgs.yunohost.org" 1>/dev/null 2>&1`
-		then
-			su $app -s /bin/bash -c "lxc remote add yunohost https://devbaseimgs.yunohost.org --public --accept-certificate"
+		if [ ! ${PACKAGE_CHECK_EXEC:-0} -eq 1 ]; then
+			lxd init --auto --storage-backend=dir
+			usermod -a -G lxd $app
+			if ! `su $app -s /bin/bash -c "lxc remote list" | grep "https://devbaseimgs.yunohost.org" 1>/dev/null 2>&1`
+			then
+				su $app -s /bin/bash -c "lxc remote add yunohost https://devbaseimgs.yunohost.org --public --accept-certificate"
+			fi
 		fi
 	fi
 fi
