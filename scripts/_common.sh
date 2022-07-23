@@ -5,9 +5,13 @@
 #=================================================
 
 # dependencies used by the app
-pkg_dependencies="nomad"
+pkg_dependencies=""
+extra_pkg_dependencies="nomad"
 
-client_pkg_dependencies="pkg-config lxc-dev lxc lxc-templates"
+server_pkg_dependencies=""
+
+client_pkg_dependencies=""
+client_lxc_pkg_dependencies="pkg-config lxc-dev lxc lxc-templates"
 
 go_version=1.15
 

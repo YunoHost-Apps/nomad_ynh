@@ -1,2 +1,2 @@
 bind-interfaces
-except-interface=__LXC_BRIDGE__
+except-interface=__CLIENT_LXC_BRIDGE__

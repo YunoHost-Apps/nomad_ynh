@@ -3,7 +3,10 @@
 		domain="domain.tld"
 		is_public=1
 		node_type="client"
+		bootstrap_expect="1"
+		retry_join="192.168.1.100"
 		server_ip="192.168.1.100"
+		driver_lxc=1
 	; Checks
 		pkg_linter=1
 		setup_sub_dir=0
@@ -22,7 +25,10 @@
 		domain="domain.tld"
 		is_public=1
 		node_type="server"
+		bootstrap_expect="1"
+		retry_join="192.168.1.100"
 		server_ip="none..."
+		driver_lxc=1
 	; Checks
 		pkg_linter=1
 		setup_sub_dir=0
