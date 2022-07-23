@@ -90,7 +90,7 @@ if [ "$node_type" == "client" ]
 then
 	ynh_install_app_dependencies $client_pkg_dependencies
 	ynh_install_apps --apps="$ynh_app_dependencies"
-	ynh_install_go --go_version=$go_version
+	ynh_exec_warn_less ynh_install_go --go_version=$go_version
 fi
 ynh_install_extra_app_dependencies --repo="deb https://apt.releases.hashicorp.com $(lsb_release -cs) main" --package="$pkg_dependencies" --key="https://apt.releases.hashicorp.com/gpg"
 
