@@ -104,7 +104,10 @@ ynh_script_progression --message="Removing dependencies..."
 ynh_remove_app_dependencies
 if [ "$node_type" == "client" ]
 then
-	ynh_remove_go
+	if [ $driver_lxc -eq 1 ]
+	then
+		ynh_remove_go
+	fi
 fi
 
 #=================================================
