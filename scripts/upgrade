@@ -7,6 +7,7 @@
 #=================================================
 
 source _common.sh
+source ynh_install_go
 source /usr/share/yunohost/helpers
 
 #=================================================
@@ -18,10 +19,16 @@ app=$YNH_APP_INSTANCE_NAME
 
 domain=$(ynh_app_setting_get --app=$app --key=domain)
 path_url=$(ynh_app_setting_get --app=$app --key=path)
-language=$(ynh_app_setting_get --app=$app --key=language)
-admin=$(ynh_app_setting_get --app=$app --key=admin)
-final_path=$(ynh_app_setting_get --app=$app --key=final_path)
-db_name=$(ynh_app_setting_get --app=$app --key=db_name)
+config_path=$(ynh_app_setting_get --app=$app --key=config_path)
+datadir=$(ynh_app_setting_get --app=$app --key=datadir)
+node_type=$(ynh_app_setting_get --app=$app --key=node_type)
+bootstrap_expect=$(ynh_app_setting_get --app=$app --key=bootstrap_expect)
+retry_join=$(ynh_app_setting_get --app=$app --key=retry_join)
+server_ip=$(ynh_app_setting_get --app=$app --key=server_ip)
+driver_lxc=$(ynh_app_setting_get --app=$app --key=driver_lxc)
+http_port=$(ynh_app_setting_get --app=$app --key=http_port)
+rpc_port=$(ynh_app_setting_get --app=$app --key=rpc_port)
+serf_port=$(ynh_app_setting_get --app=$app --key=serf_port)
 
 #=================================================
 # CHECK VERSION
@@ -66,54 +73,35 @@ if ynh_legacy_permissions_exists; then
 	ynh_app_setting_delete --app=$app --key=is_public
 fi
 
-if ! ynh_permission_exists --permission="admin"; then
-	# Create the required permissions
-	ynh_permission_create --permission="admin" --url="/admin" --allowed=$admin
-fi
-
-# Create a permission if needed
-if ! ynh_permission_exists --permission="api"; then
-	ynh_permission_create --permission="api" --url="/api" --allowed="visitors" --show_tile="false" --protected="true"
-fi
-
 #=================================================
 # CREATE DEDICATED USER
 #=================================================
 ynh_script_progression --message="Making sure dedicated system user exists..."
 
 # Create a dedicated user (if not existing)
-ynh_system_user_create --username=$app --home_dir="$final_path"
-
-#=================================================
-# DOWNLOAD, CHECK AND UNPACK SOURCE
-#=================================================
-
-if [ "$upgrade_type" == "UPGRADE_APP" ]
-then
-	ynh_script_progression --message="Upgrading source files..."
-
-	# Download, check integrity, uncompress and patch the source from app.src
-	ynh_setup_source --dest_dir="$final_path"
-fi
-
-chmod 750 "$final_path"
-chmod -R o-rwx "$final_path"
-chown -R $app:www-data "$final_path"
+ynh_system_user_create --username=$app
 
 #=================================================
 # UPGRADE DEPENDENCIES
 #=================================================
 ynh_script_progression --message="Upgrading dependencies..."
 
+if [ "$node_type" == "server" ]
+then
+	pkg_dependencies="$pkg_dependencies $server_pkg_dependencies"
+fi
+
+if [ "$node_type" == "client" ]
+then
+	if [ $driver_lxc -eq 1 ]
+	then
+		client_pkg_dependencies="$client_pkg_dependencies $client_lxc_pkg_dependencies"
+		ynh_exec_warn_less ynh_install_go --go_version=$go_version
+	fi	
+	pkg_dependencies="$pkg_dependencies $client_pkg_dependencies"
+fi
 ynh_install_app_dependencies $pkg_dependencies
-
-#=================================================
-# PHP-FPM CONFIGURATION
-#=================================================
-ynh_script_progression --message="Upgrading PHP-FPM configuration..."
-
-# Create a dedicated PHP-FPM config
-ynh_add_fpm_config
+ynh_install_extra_app_dependencies --repo="deb https://apt.releases.hashicorp.com $(lsb_release -cs) main" --package="$extra_pkg_dependencies" --key="https://apt.releases.hashicorp.com/gpg"
 
 #=================================================
 # NGINX CONFIGURATION
@@ -126,24 +114,77 @@ ynh_add_nginx_config
 #=================================================
 # SPECIFIC UPGRADE
 #=================================================
-# ...
+# BUILD DRIVERS
 #=================================================
+
+if [ "$node_type" == "client" ]
+then
+	if [ $driver_lxc -eq 1 ]
+	then
+		ynh_script_progression --message="Building LXC driver..."
+
+		tempdir="$(mktemp -d)"
+		ynh_setup_source --dest_dir="$tempdir" --source_id="driver-lxc"
+
+		pushd $tempdir
+			final_path=$tempdir
+			ynh_use_go
+			export GOPATH="$tempdir/go"
+			export GOCACHE="$tempdir/.cache"
+			ynh_exec_warn_less $ynh_go build
+		popd
+
+		mv -f $tempdir/nomad-driver-lxc $datadir/plugins/nomad-driver-lxc
+
+		ynh_secure_remove --file="$tempdir"
+	fi
+fi
 
 #=================================================
 # UPDATE A CONFIG FILE
 #=================================================
 ynh_script_progression --message="Updating a configuration file..."
 
-ynh_add_config --template="some_config_file" --destination="$final_path/some_config_file"
+mkdir -p $config_path
+chmod 750 "$config_path"
+chmod -R o-rwx "$config_path"
+chown -R $app:$app "$config_path"
 
-chmod 400 "$final_path/some_config_file"
-chown $app:$app "$final_path/some_config_file"
+ynh_add_config --template="../conf/nomad.hcl" --destination="$config_path/nomad.hcl"
+chmod 400 "$config_path/nomad.hcl"
+chown $app:$app "$config_path/nomad.hcl"
+
+if [ "$node_type" == "server" ]
+then
+	ynh_add_config --template="../conf/server.hcl" --destination="$config_path/server.hcl"
+	chmod 400 "$config_path/server.hcl"
+	chown $app:$app "$config_path/server.hcl"
+fi
+
+if [ "$node_type" == "client" ]
+then
+	ynh_add_config --template="../conf/client.hcl" --destination="$config_path/client.hcl"
+	chmod 400 "$config_path/client.hcl"
+	chown $app:$app "$config_path/client.hcl"
+	
+	if [ $driver_lxc -eq 1 ]
+	then
+		ynh_add_config --template="../conf/driver-lxc.hcl" --destination="$config_path/driver-lxc.hcl"
+		chmod 400 "$config_path/driver-lxc.hcl"
+		chown $app:$app "$config_path/driver-lxc.hcl"
+	fi
+fi
 
 #=================================================
 # SETUP SYSTEMD
 #=================================================
 ynh_script_progression --message="Upgrading systemd configuration..."
 
+systemd_user=$app
+if [ "$node_type" == "client" ]
+then
+	systemd_user="root"
+fi
 # Create a dedicated systemd config
 ynh_add_systemd_config
 
@@ -162,22 +203,19 @@ ynh_use_logrotate --non-append
 #=================================================
 ynh_script_progression --message="Integrating service in YunoHost..."
 
-yunohost service add $app --log="/var/log/$app/$app.log"
+needs_exposed_ports="$rpc_port"
+if [ "$node_type" == "server" ]
+then
+	needs_exposed_ports="$serf_port $needs_exposed_ports"
+fi
+yunohost service add $app --log="/var/log/$app/$app.log" --needs_exposed_ports $needs_exposed_ports
 
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
 ynh_script_progression --message="Starting a systemd service..."
 
-ynh_systemd_action --service_name=$app --action="start" --log_path="/var/log/$app/$app.log"
-
-#=================================================
-# UPGRADE FAIL2BAN
-#=================================================
-ynh_script_progression --message="Reconfiguring Fail2Ban..."
-
-# Create a dedicated Fail2Ban config
-ynh_add_fail2ban_config --logpath="/var/log/nginx/${domain}-error.log" --failregex="Regex to match into the log for a failed login"
+ynh_systemd_action --service_name=$app --action="start" --log_path="/var/log/$app/$app.log" --line_match="Nomad agent started"
 
 #=================================================
 # RELOAD NGINX

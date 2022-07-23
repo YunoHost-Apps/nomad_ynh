@@ -7,6 +7,7 @@
 #=================================================
 
 source _common.sh
+source ynh_install_go
 source /usr/share/yunohost/helpers
 
 #=================================================
@@ -17,11 +18,12 @@ ynh_script_progression --message="Loading installation settings..."
 app=$YNH_APP_INSTANCE_NAME
 
 domain=$(ynh_app_setting_get --app=$app --key=domain)
-port=$(ynh_app_setting_get --app=$app --key=port)
-db_name=$(ynh_app_setting_get --app=$app --key=db_name)
-db_user=$db_name
-final_path=$(ynh_app_setting_get --app=$app --key=final_path)
+config_path=$(ynh_app_setting_get --app=$app --key=config_path)
 datadir=$(ynh_app_setting_get --app=$app --key=datadir)
+node_type=$(ynh_app_setting_get --app=$app --key=node_type)
+driver_lxc=$(ynh_app_setting_get --app=$app --key=driver_lxc)
+rpc_port=$(ynh_app_setting_get --app=$app --key=rpc_port)
+serf_port=$(ynh_app_setting_get --app=$app --key=serf_port)
 
 #=================================================
 # STANDARD REMOVE
@@ -41,6 +43,7 @@ fi
 #=================================================
 ynh_script_progression --message="Stopping and removing the systemd service..."
 
+ynh_exec_warn_less nomad node drain -self -enable
 # Remove the dedicated systemd config
 ynh_remove_systemd_config
 
@@ -53,20 +56,59 @@ ynh_script_progression --message="Removing logrotate configuration..."
 ynh_remove_logrotate
 
 #=================================================
-# REMOVE THE MYSQL DATABASE
+# REMOVE NGINX CONFIGURATION
 #=================================================
-ynh_script_progression --message="Removing the MySQL database..."
+ynh_script_progression --message="Removing NGINX web server configuration..."
 
-# Remove a database if it exists, along with the associated user
-ynh_mysql_remove_db --db_user=$db_user --db_name=$db_name
+# Remove the dedicated NGINX config
+ynh_remove_nginx_config
 
 #=================================================
-# REMOVE APP MAIN DIR
+# CLOSE A PORT
 #=================================================
-ynh_script_progression --message="Removing app main directory..."
 
-# Remove the app directory securely
-ynh_secure_remove --file="$final_path"
+if yunohost firewall list | grep -q "\- $rpc_port$"
+then
+	ynh_script_progression --message="Closing port $rpc_port..."
+	ynh_exec_warn_less yunohost firewall disallow TCP $rpc_port
+fi
+
+if yunohost firewall list | grep -q "\- $serf_port$"
+then
+	ynh_script_progression --message="Closing port $serf_port..."
+	ynh_exec_warn_less yunohost firewall disallow TCP $serf_port
+fi
+
+if [ "$node_type" == "client" ]
+then
+	
+	if [ $driver_lxc -eq 1 ]
+	then
+		client_lxc_bridge=$(ynh_app_setting_get --app=$app --key=client_lxc_bridge)
+
+		ynh_systemd_action --service_name=lxc-net --action="stop"
+		systemctl disable lxc-net --quiet
+		ynh_secure_remove --file="/etc/default/lxc-net"
+		ynh_secure_remove --file="/etc/lxc/default.conf"
+		ynh_secure_remove --file="/etc/dnsmasq.d/lxd"
+		systemctl restart dnsmasq
+	fi
+fi
+
+#=================================================
+# REMOVE DEPENDENCIES
+#=================================================
+ynh_script_progression --message="Removing dependencies..."
+
+# Remove metapackage and its dependencies
+ynh_remove_app_dependencies
+if [ "$node_type" == "client" ]
+then
+	if [ $driver_lxc -eq 1 ]
+	then
+		ynh_remove_go
+	fi
+fi
 
 #=================================================
 # REMOVE DATA DIR
@@ -80,59 +122,14 @@ then
 fi
 
 #=================================================
-# REMOVE NGINX CONFIGURATION
-#=================================================
-ynh_script_progression --message="Removing NGINX web server configuration..."
-
-# Remove the dedicated NGINX config
-ynh_remove_nginx_config
-
-#=================================================
-# REMOVE PHP-FPM CONFIGURATION
-#=================================================
-ynh_script_progression --message="Removing PHP-FPM configuration..."
-
-# Remove the dedicated PHP-FPM config
-ynh_remove_fpm_config
-
-#=================================================
-# REMOVE DEPENDENCIES
-#=================================================
-ynh_script_progression --message="Removing dependencies..."
-
-# Remove metapackage and its dependencies
-ynh_remove_app_dependencies
-
-#=================================================
-# CLOSE A PORT
-#=================================================
-
-if yunohost firewall list | grep -q "\- $port$"
-then
-	ynh_script_progression --message="Closing port $port..."
-	ynh_exec_warn_less yunohost firewall disallow TCP $port
-fi
-
-#=================================================
-# REMOVE FAIL2BAN CONFIGURATION
-#=================================================
-ynh_script_progression --message="Removing Fail2Ban configuration..."
-
-# Remove the dedicated Fail2Ban config
-ynh_remove_fail2ban_config
-
-#=================================================
 # SPECIFIC REMOVE
 #=================================================
 # REMOVE VARIOUS FILES
 #=================================================
 ynh_script_progression --message="Removing various files..."
 
-# Remove a cron file
-ynh_secure_remove --file="/etc/cron.d/$app"
-
 # Remove a directory securely
-ynh_secure_remove --file="/etc/$app"
+ynh_secure_remove --file="$config_path"
 
 # Remove the log files
 ynh_secure_remove --file="/var/log/$app"

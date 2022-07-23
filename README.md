@@ -15,46 +15,196 @@ If you don't have YunoHost, please consult [the guide](https://yunohost.org/#/in
 
 ## Overview
 
-Some long and extensive description of what the app is and does, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-
-### Features
-
-- Ut enim ad minim veniam, quis nostrud exercitation ullamco ;
-- Laboris nisi ut aliquip ex ea commodo consequat ;
-- Duis aute irure dolor in reprehenderit in voluptate ;
-- Velit esse cillum dolore eu fugiat nulla pariatur ;
-- Excepteur sint occaecat cupidatat non proident, sunt in culpa."
+Nomad is a simple and flexible workload orchestrator to deploy and manage containers ([docker](https://www.nomadproject.io/docs/drivers/docker.html), [podman](https://www.nomadproject.io/docs/drivers/podman)), non-containerized applications ([executable](https://www.nomadproject.io/docs/drivers/exec.html), [Java](https://www.nomadproject.io/docs/drivers/java)), and virtual machines ([qemu](https://www.nomadproject.io/docs/drivers/qemu.html)) across on-prem and clouds at scale.
 
 
-**Shipped version:** 1.0~ynh1
-
-**Demo:** https://demo.example.com
+**Shipped version:** 1.3.2~ynh1
 
 ## Screenshots
 
-![Screenshot of Nomad](./doc/screenshots/example.jpg)
+![Screenshot of Nomad](./doc/screenshots/assets.png)
 
 ## Disclaimers / important information
 
-* Any known limitations, constrains or stuff not working, such as (but not limited to):
-    * requiring a full dedicated domain ?
-    * architectures not supported ?
-    * not-working single-sign on or LDAP integration ?
-    * the app requires an important amount of RAM / disk / .. to install or to work properly
-    * etc...
+## Some Nomad Job examples
 
-* Other infos that people should be aware of, such as:
-    * any specific step to perform after installing (such as manually finishing the install, specific admin credentials, ...)
-    * how to configure / administrate the application if it ain't obvious
-    * upgrade process / specificities / things to be aware of ?
-    * security considerations ?
+### Busybox
+
+`lxc-create --name=busybox --template=busybox`
+
+```
+job "job-busybox" {
+  datacenters = ["dc1"]
+  type        = "service"
+
+  group "group-busybox" {
+    task "task-busybox" {
+      driver = "lxc"
+
+      config {
+        log_level = "info"
+        verbosity = "verbose"
+        template  = "/usr/share/lxc/templates/lxc-busybox"
+      }
+
+      resources {
+        cpu    = 500
+        memory = 256
+      }
+    }
+  }
+}
+```
+
+### Debian
+
+`lxc-create --name=debian --template=debian`
+
+```
+job "job-debian" {
+  datacenters = ["dc1"]
+  type        = "service"
+
+  group "group-debian" {
+    task "task-debian" {
+      driver = "lxc"
+
+      config {
+        log_level = "info"
+        verbosity = "verbose"
+        template  = "/usr/share/lxc/templates/lxc-debian"
+      }
+
+      resources {
+        cpu    = 500
+        memory = 256
+      }
+    }
+  }
+}
+```
+
+### Debian Stretch
+
+`lxc-create --name=stretch --template=debian -- --release=stretch`
+
+```
+job "job-stretch" {
+  datacenters = ["dc1"]
+  type        = "service"
+
+  group "group-stretch" {
+    task "task-stretch" {
+      driver = "lxc"
+
+      config {
+        log_level = "info"
+        verbosity = "verbose"
+        template  = "/usr/share/lxc/templates/lxc-debian"
+		template_args = ["--release=stretch"]
+      }
+
+      resources {
+        cpu    = 500
+        memory = 256
+      }
+    }
+  }
+}
+```
+
+### Debian Buster
+
+`lxc-create --name=buster --template=debian -- --release=buster`
+
+```
+job "job-buster" {
+  datacenters = ["dc1"]
+  type        = "service"
+
+  group "group-buster" {
+    task "task-buster" {
+      driver = "lxc"
+
+      config {
+        log_level = "info"
+        verbosity = "verbose"
+        template  = "/usr/share/lxc/templates/lxc-debian"
+		template_args = ["--release=buster"]
+      }
+
+      resources {
+        cpu    = 500
+        memory = 256
+      }
+    }
+  }
+}
+```
+
+### Debian Buster from images.linuxcontainers.org
+
+`lxc-create --name=download-buster --template=download -- --dist=debian --release=buster --arch=amd64 --keyserver=hkp://keyserver.ubuntu.com`
+
+```
+job "job-download-buster" {
+  datacenters = ["dc1"]
+  type        = "service"
+
+  group "group-download-buster" {
+    task "task-download-buster" {
+      driver = "lxc"
+
+      config {
+        log_level = "info"
+        verbosity = "verbose"
+        template  = "/usr/share/lxc/templates/lxc-download"
+		template_args = ["--dist=debian","--release=buster","--arch=amd64","--keyserver=hkp://keyserver.ubuntu.com"]
+      }
+
+      resources {
+        cpu    = 500
+        memory = 256
+      }
+    }
+  }
+}
+```
+
+### Debian Bullseye from images.linuxcontainers.org
+
+`lxc-create --name=download-bullseye --template=download -- --dist=debian --release=bullseye --arch=amd64 --keyserver=hkp://keyserver.ubuntu.com`
+
+```
+job "job-download-bullseye" {
+  datacenters = ["dc1"]
+  type        = "service"
+
+  group "group-download-bullseye" {
+    task "task-download-bullseye" {
+      driver = "lxc"
+
+      config {
+        log_level = "info"
+        verbosity = "verbose"
+        template  = "/usr/share/lxc/templates/lxc-download"
+		template_args = ["--dist=debian","--release=bullseye","--arch=amd64","--keyserver=hkp://keyserver.ubuntu.com"]
+      }
+
+      resources {
+        cpu    = 500
+        memory = 256
+      }
+    }
+  }
+}
+```
 
 ## Documentation and resources
 
-* Official app website: <https://example.com>
-* Official user documentation: <https://yunohost.org/apps>
-* Official admin documentation: <https://yunohost.org/packaging_apps>
-* Upstream app code repository: <https://some.forge.com/example/example>
+* Official app website: <https://www.nomadproject.io/>
+* Official admin documentation: <https://www.nomadproject.io/docs>
+* Upstream app code repository: <https://github.com/hashicorp/nomad>
 * YunoHost documentation for this app: <https://yunohost.org/app_nomad>
 * Report a bug: <https://github.com/YunoHost-Apps/nomad_ynh/issues>
 
