@@ -32,6 +32,7 @@ path_url=$(ynh_app_setting_get --app=$app --key=path)
 config_path=$(ynh_app_setting_get --app=$app --key=config_path)
 datadir=$(ynh_app_setting_get --app=$app --key=datadir)
 node_type=$(ynh_app_setting_get --app=$app --key=node_type)
+driver_lxc=$(ynh_app_setting_get --app=$app --key=driver_lxc)
 http_port=$(ynh_app_setting_get --app=$app --key=http_port)
 rpc_port=$(ynh_app_setting_get --app=$app --key=rpc_port)
 serf_port=$(ynh_app_setting_get --app=$app --key=serf_port)
@@ -71,8 +72,17 @@ chown -R $app:$app "$datadir"
 #=================================================
 ynh_script_progression --message="Reinstalling dependencies..."
 
+if [ "$node_type" == "server" ]
+then
+	ynh_install_app_dependencies $server_pkg_dependencies
+fi
+
 if [ "$node_type" == "client" ]
 then
+	if [ $driver_lxc -eq 1 ]
+	then
+		client_pkg_dependencies="$client_pkg_dependencies $client_lxc_pkg_dependencies"
+	fi	
 	ynh_install_app_dependencies $client_pkg_dependencies
 	ynh_install_apps --apps="$ynh_app_dependencies"
 fi
@@ -107,12 +117,15 @@ then
 fi
 
 if [ "$node_type" == "client" ]
-then
-	lxd init --auto --storage-backend=dir
-	usermod -a -G lxd $app
-	if ! `su $app -s /bin/bash -c "lxc remote list" | grep "https://devbaseimgs.yunohost.org" 1>/dev/null 2>&1`
+then	
+	if [ $driver_lxc -eq 1 ]
 	then
-		su $app -s /bin/bash -c "lxc remote add yunohost https://devbaseimgs.yunohost.org --public --accept-certificate"
+		lxd init --auto --storage-backend=dir
+		usermod -a -G lxd $app
+		if ! `su $app -s /bin/bash -c "lxc remote list" | grep "https://devbaseimgs.yunohost.org" 1>/dev/null 2>&1`
+		then
+			su $app -s /bin/bash -c "lxc remote add yunohost https://devbaseimgs.yunohost.org --public --accept-certificate"
+		fi
 	fi
 fi
 

@@ -8,7 +8,7 @@ server {
     # This is an integer representing the number of server nodes to wait for before bootstrapping. It is most
     # common to use the odd-numbered integers 3 or 5 for this value, depending on the cluster size. A value of
     # 1 does not provide any fault tolerance and is not recommended for production use cases.  
-    bootstrap_expect = 1
+    bootstrap_expect = __BOOTSTRAP_EXPECT__
 
     # This is the data directory used for server-specific data, including the replicated log. By default, this
     # directory lives inside of the data_dir in the "server" sub-path. 
@@ -38,7 +38,7 @@ server {
 
     # Similar to start_join but allows retrying a join if the first attempt fails. This is useful for cases
     # where we know the address will become available eventually. 
-#   retry_join = []
+    retry_join = ["__RETRY_JOIN__"]
 
     # The time to wait between join attempts. Defaults to 30s.
     retry_interval = "30s"

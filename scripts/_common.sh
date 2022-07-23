@@ -7,8 +7,10 @@
 # dependencies used by the app
 pkg_dependencies="nomad"
 
+server_pkg_dependencies=""
+
 client_pkg_dependencies=""
-# lxc-templates
+client_lxd_pkg_dependencies=""
 
 go_version=1.15
 
