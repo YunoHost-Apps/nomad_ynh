@@ -25,6 +25,7 @@ node_type=$(ynh_app_setting_get --app=$app --key=node_type)
 bootstrap_expect=$(ynh_app_setting_get --app=$app --key=bootstrap_expect)
 retry_join=$(ynh_app_setting_get --app=$app --key=retry_join)
 server_ip=$(ynh_app_setting_get --app=$app --key=server_ip)
+driver_lxc=$(ynh_app_setting_get --app=$app --key=driver_lxc)
 http_port=$(ynh_app_setting_get --app=$app --key=http_port)
 rpc_port=$(ynh_app_setting_get --app=$app --key=rpc_port)
 serf_port=$(ynh_app_setting_get --app=$app --key=serf_port)
@@ -85,10 +86,19 @@ ynh_system_user_create --username=$app
 #=================================================
 ynh_script_progression --message="Upgrading dependencies..."
 
+if [ "$node_type" == "server" ]
+then
+	ynh_install_app_dependencies $server_pkg_dependencies
+fi
+
 if [ "$node_type" == "client" ]
 then
+	if [ $driver_lxc -eq 1 ]
+	then
+		$client_pkg_dependencies="$client_pkg_dependencies $client_lxc_pkg_dependencies"
+		ynh_install_go --go_version=$go_version
+	fi	
 	ynh_install_app_dependencies $client_pkg_dependencies
-	ynh_install_go --go_version=$go_version
 fi
 ynh_install_extra_app_dependencies --repo="deb https://apt.releases.hashicorp.com $(lsb_release -cs) main" --package="$pkg_dependencies" --key="https://apt.releases.hashicorp.com/gpg"
 
@@ -103,27 +113,30 @@ ynh_add_nginx_config
 #=================================================
 # SPECIFIC UPGRADE
 #=================================================
-# BUILD LXC DRIVER
+# BUILD DRIVERS
 #=================================================
 
 if [ "$node_type" == "client" ]
 then
-	ynh_script_progression --message="Building LXC driver..."
+	if [ $driver_lxc -eq 1 ]
+	then
+		ynh_script_progression --message="Building LXC driver..."
 
-	tempdir="$(mktemp -d)"
-	ynh_setup_source --dest_dir="$tempdir" --source_id="driver-lxc"
+		tempdir="$(mktemp -d)"
+		ynh_setup_source --dest_dir="$tempdir" --source_id="driver-lxc"
 
-	pushd $tempdir
-		final_path=$tempdir
-		ynh_use_go
-		export GOPATH="$tempdir/go"
-		export GOCACHE="$tempdir/.cache"
-		ynh_exec_warn_less$ynh_go build
-	popd
+		pushd $tempdir
+			final_path=$tempdir
+			ynh_use_go
+			export GOPATH="$tempdir/go"
+			export GOCACHE="$tempdir/.cache"
+			ynh_exec_warn_less$ynh_go build
+		popd
 
-	mv -f $tempdir/nomad-driver-lxc $datadir/plugins/nomad-driver-lxc
+		mv -f $tempdir/nomad-driver-lxc $datadir/plugins/nomad-driver-lxc
 
-	ynh_secure_remove --file="$tempdir"
+		ynh_secure_remove --file="$tempdir"
+	fi
 fi
 
 #=================================================
@@ -152,10 +165,13 @@ then
 	ynh_add_config --template="../conf/client.hcl" --destination="$config_path/client.hcl"
 	chmod 400 "$config_path/client.hcl"
 	chown $app:$app "$config_path/client.hcl"
-
-	ynh_add_config --template="../conf/driver-lxc.hcl" --destination="$config_path/driver-lxc.hcl"
-	chmod 400 "$config_path/driver-lxc.hcl"
-	chown $app:$app "$config_path/driver-lxc.hcl"
+	
+	if [ $driver_lxc -eq 1 ]
+	then
+		ynh_add_config --template="../conf/driver-lxc.hcl" --destination="$config_path/driver-lxc.hcl"
+		chmod 400 "$config_path/driver-lxc.hcl"
+		chown $app:$app "$config_path/driver-lxc.hcl"
+	fi
 fi
 
 #=================================================

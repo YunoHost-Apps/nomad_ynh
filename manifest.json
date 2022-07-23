@@ -74,6 +74,26 @@
                 },
                 "example": "192.168.1.100",
                 "optional": true
+            },
+            {
+                "name": "server_ip",
+                "type": "string",
+                "ask": {
+                    "en": "[Client only] What is the IP of the Nomad server node ?"
+                },
+                "example": "192.168.1.100",
+                "optional": true
+            },
+            {
+                "name": "driver_lxc",
+                "type": "boolean",
+                "ask": {
+                    "en": "[Client only] Do you want to install LXC driver ?"
+                },
+                "default": true,
+                "help": {
+                    "en": "It will also install lxc."
+                }
             }
         ]
     }

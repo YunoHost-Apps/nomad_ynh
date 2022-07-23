@@ -20,6 +20,7 @@ domain=$(ynh_app_setting_get --app=$app --key=domain)
 config_path=$(ynh_app_setting_get --app=$app --key=config_path)
 datadir=$(ynh_app_setting_get --app=$app --key=datadir)
 node_type=$(ynh_app_setting_get --app=$app --key=node_type)
+driver_lxc=$(ynh_app_setting_get --app=$app --key=driver_lxc)
 rpc_port=$(ynh_app_setting_get --app=$app --key=rpc_port)
 serf_port=$(ynh_app_setting_get --app=$app --key=serf_port)
 
@@ -79,15 +80,18 @@ fi
 
 if [ "$node_type" == "client" ]
 then
+	
+	if [ $driver_lxc -eq 1 ]
+	then
+		lxc_bridge=$(ynh_app_setting_get --app=$app --key=lxc_bridge)
 
-	lxc_bridge=$(ynh_app_setting_get --app=$app --key=lxc_bridge)
-
-	ynh_systemd_action --service_name=lxc-net --action="stop"
-	systemctl disable lxc-net --quiet
-	ynh_secure_remove --file="/etc/default/lxc-net"
-	ynh_secure_remove --file="/etc/lxc/default.conf"
-	ynh_secure_remove --file="/etc/dnsmasq.d/lxd"
-	systemctl restart dnsmasq
+		ynh_systemd_action --service_name=lxc-net --action="stop"
+		systemctl disable lxc-net --quiet
+		ynh_secure_remove --file="/etc/default/lxc-net"
+		ynh_secure_remove --file="/etc/lxc/default.conf"
+		ynh_secure_remove --file="/etc/dnsmasq.d/lxd"
+		systemctl restart dnsmasq
+	fi
 fi
 
 #=================================================
