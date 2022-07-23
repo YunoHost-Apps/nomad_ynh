@@ -85,14 +85,14 @@
                 "optional": true
             },
             {
-                "name": "driver_lxc",
+                "name": "driver_lxd",
                 "type": "boolean",
                 "ask": {
-                    "en": "[Client only] Do you want to install LXC driver ?"
+                    "en": "[Client only] Do you want to install LXD driver ?"
                 },
                 "default": true,
                 "help": {
-                    "en": "It will also install lxc."
+                    "en": "It will also install lxd_ynh."
                 }
             }
         ]

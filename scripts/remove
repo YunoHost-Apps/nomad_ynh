@@ -22,7 +22,7 @@ domain=$(ynh_app_setting_get --app=$app --key=domain)
 config_path=$(ynh_app_setting_get --app=$app --key=config_path)
 datadir=$(ynh_app_setting_get --app=$app --key=datadir)
 node_type=$(ynh_app_setting_get --app=$app --key=node_type)
-driver_lxc=$(ynh_app_setting_get --app=$app --key=driver_lxc)
+driver_lxd=$(ynh_app_setting_get --app=$app --key=driver_lxd)
 rpc_port=$(ynh_app_setting_get --app=$app --key=rpc_port)
 serf_port=$(ynh_app_setting_get --app=$app --key=serf_port)
 
@@ -90,7 +90,7 @@ ynh_remove_app_dependencies
 ynh_remove_apps
 if [ "$node_type" == "client" ]
 then
-	if [ $driver_lxc -eq 1 ]
+	if [ $driver_lxd -eq 1 ]
 	then
 		ynh_remove_go
 	fi
