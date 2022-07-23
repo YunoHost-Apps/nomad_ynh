@@ -73,6 +73,31 @@ if ynh_legacy_permissions_exists; then
 	ynh_app_setting_delete --app=$app --key=is_public
 fi
 
+if [ "$node_type" == "client" ]
+then
+	# Upgrade from lxc to lxd
+	driver_lxc=$(ynh_app_setting_get --app=$app --key=driver_lxc)
+	if [ $driver_lxc -eq 1 ]
+	then
+		client_lxc_bridge=$(ynh_app_setting_get --app=$app --key=client_lxc_bridge)
+
+		ynh_systemd_action --service_name=lxc-net --action="stop"
+		systemctl disable lxc-net --quiet
+		ynh_secure_remove --file="/etc/default/lxc-net"
+		ynh_secure_remove --file="/etc/lxc/default.conf"
+		ynh_secure_remove --file="/etc/dnsmasq.d/lxd"
+		systemctl restart dnsmasq
+
+		ynh_secure_remove --file="$datadir/plugins/nomad-driver-lxc"
+		ynh_secure_remove --file="$config_path/driver-lxc.hcl"
+
+		ynh_app_setting_delete --app=$app --key=driver_lxc
+		ynh_app_setting_delete --app=$app --key=client_lxc_bridge
+		ynh_app_setting_delete --app=$app --key=client_lxc_plage_ip
+		ynh_app_setting_delete --app=$app --key=client_lxc_main_iface
+	fi
+fi
+
 #=================================================
 # CREATE DEDICATED USER
 #=================================================
@@ -95,8 +120,8 @@ if [ "$node_type" == "client" ]
 then
 	if [ $driver_lxd -eq 1 ]
 	then
-		client_pkg_dependencies="$client_pkg_dependencies $client_lxc_pkg_dependencies"
-		client_app_dependencies="$client_app_dependencies $client_lxc_app_dependencies"
+		client_pkg_dependencies="$client_pkg_dependencies $client_lxd_pkg_dependencies"
+		client_app_dependencies="$client_app_dependencies $client_lxd_app_dependencies"
 		ynh_exec_warn_less ynh_install_go --go_version=$go_version
 	fi
 	ynh_install_app_dependencies $client_pkg_dependencies

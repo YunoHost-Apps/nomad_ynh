@@ -81,8 +81,8 @@ if [ "$node_type" == "client" ]
 then
 	if [ $driver_lxd -eq 1 ]
 	then
-		client_pkg_dependencies="$client_pkg_dependencies $client_lxc_pkg_dependencies"
-		client_app_dependencies="$client_app_dependencies $client_lxc_app_dependencies"
+		client_pkg_dependencies="$client_pkg_dependencies $client_lxd_pkg_dependencies"
+		client_app_dependencies="$client_app_dependencies $client_lxd_app_dependencies"
 	fi
 	ynh_install_app_dependencies $client_pkg_dependencies
 	ynh_install_apps --apps="$client_app_dependencies"

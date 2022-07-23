@@ -41,6 +41,8 @@ app=$YNH_APP_INSTANCE_NAME
 #=================================================
 ynh_script_progression --message="Validating installation parameters..."
 
+config_path=/etc/$app.d
+
 # Register (book) web path
 ynh_webpath_register --app=$app --domain=$domain --path_url=$path_url
 
@@ -51,6 +53,7 @@ ynh_script_progression --message="Storing installation settings..."
 
 ynh_app_setting_set --app=$app --key=domain --value=$domain
 ynh_app_setting_set --app=$app --key=path --value=$path_url
+ynh_app_setting_set --app=$app --key=config_path --value=$config_path
 ynh_app_setting_set --app=$app --key=node_type --value=$node_type
 ynh_app_setting_set --app=$app --key=bootstrap_expect --value=$bootstrap_expect
 ynh_app_setting_set --app=$app --key=retry_join --value=$retry_join
@@ -101,8 +104,8 @@ if [ "$node_type" == "client" ]
 then
 	if [ $driver_lxd -eq 1 ]
 	then
-		client_pkg_dependencies="$client_pkg_dependencies $client_lxc_pkg_dependencies"
-		client_app_dependencies="$client_app_dependencies $client_lxc_app_dependencies"
+		client_pkg_dependencies="$client_pkg_dependencies $client_lxd_pkg_dependencies"
+		client_app_dependencies="$client_app_dependencies $client_lxd_app_dependencies"
 		ynh_exec_warn_less ynh_install_go --go_version=$go_version
 	fi
 	ynh_install_app_dependencies $client_pkg_dependencies
@@ -164,7 +167,7 @@ then
 			ynh_exec_warn_less $ynh_go build
 		popd
 
-		mv -f $tempdir/nomad-driver-lxc $datadir/plugins/nomad-driver-lxd
+		mv -f $tempdir/nomad-driver-lxd $datadir/plugins/nomad-driver-lxd
 
 		ynh_secure_remove --file="$tempdir"
 	fi
@@ -174,9 +177,6 @@ fi
 # ADD A CONFIGURATION
 #=================================================
 ynh_script_progression --message="Adding a configuration file..."
-
-config_path=/etc/$app.d
-ynh_app_setting_set --app=$app --key=config_path --value=$config_path
 
 mkdir -p $config_path
 chmod 750 "$config_path"

@@ -10,6 +10,8 @@ pkg_dependencies="nomad"
 server_pkg_dependencies=""
 
 client_pkg_dependencies=""
+client_app_dependencies=""
+
 client_lxd_pkg_dependencies=""
 client_lxd_app_dependencies="lxd"
 
