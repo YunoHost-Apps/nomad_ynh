@@ -3,6 +3,7 @@
 		domain="domain.tld"
 		is_public=1
 		node_type="client"
+		bootstrap_expect="1"
 		server_ip="192.168.1.100"
 	; Checks
 		pkg_linter=1
@@ -22,6 +23,7 @@
 		domain="domain.tld"
 		is_public=1
 		node_type="server"
+		bootstrap_expect="1"
 		server_ip="none..."
 	; Checks
 		pkg_linter=1
