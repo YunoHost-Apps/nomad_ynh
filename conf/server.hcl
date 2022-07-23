@@ -38,7 +38,7 @@ server {
 
     # Similar to start_join but allows retrying a join if the first attempt fails. This is useful for cases
     # where we know the address will become available eventually. 
-#   retry_join = []
+    retry_join = ["__RETRY_JOIN__"]
 
     # The time to wait between join attempts. Defaults to 30s.
     retry_interval = "30s"

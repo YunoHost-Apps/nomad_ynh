@@ -58,6 +58,15 @@
                 }
             },
             {
+                "name": "retry_join",
+                "type": "string",
+                "ask": {
+                    "en": "[Server only] What is the IP of another server to join ?"
+                },
+                "example": "192.168.1.100",
+                "optional": true
+            },
+            {
                 "name": "server_ip",
                 "type": "string",
                 "ask": {
