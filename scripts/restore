@@ -74,7 +74,7 @@ ynh_script_progression --message="Reinstalling dependencies..."
 
 if [ "$node_type" == "server" ]
 then
-	ynh_install_app_dependencies $server_pkg_dependencies
+	pkg_dependencies="$pkg_dependencies $server_pkg_dependencies"
 fi
 
 if [ "$node_type" == "client" ]
@@ -84,10 +84,13 @@ then
 		client_pkg_dependencies="$client_pkg_dependencies $client_lxd_pkg_dependencies"
 		client_app_dependencies="$client_app_dependencies $client_lxd_app_dependencies"
 	fi
-	ynh_install_app_dependencies $client_pkg_dependencies
+		client_pkg_dependencies="$client_pkg_dependencies $client_lxc_pkg_dependencies"
+	fi
 	ynh_install_apps --apps="$client_app_dependencies"
+	pkg_dependencies="$pkg_dependencies $client_pkg_dependencies"
 fi
-ynh_install_extra_app_dependencies --repo="deb https://apt.releases.hashicorp.com $(lsb_release -cs) main" --package="$pkg_dependencies" --key="https://apt.releases.hashicorp.com/gpg"
+ynh_install_app_dependencies $pkg_dependencies
+ynh_install_extra_app_dependencies --repo="deb https://apt.releases.hashicorp.com $(lsb_release -cs) main" --package="$extra_pkg_dependencies" --key="https://apt.releases.hashicorp.com/gpg"
 
 #=================================================
 # RESTORE THE NGINX CONFIGURATION

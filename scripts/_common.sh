@@ -5,7 +5,8 @@
 #=================================================
 
 # dependencies used by the app
-pkg_dependencies="nomad"
+pkg_dependencies=""
+extra_pkg_dependencies="nomad"
 
 server_pkg_dependencies=""
 
