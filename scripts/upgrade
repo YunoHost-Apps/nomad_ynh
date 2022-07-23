@@ -95,7 +95,7 @@ if [ "$node_type" == "client" ]
 then
 	if [ $driver_lxc -eq 1 ]
 	then
-		$client_pkg_dependencies="$client_pkg_dependencies $client_lxc_pkg_dependencies"
+		client_pkg_dependencies="$client_pkg_dependencies $client_lxc_pkg_dependencies"
 		ynh_exec_warn_less ynh_install_go --go_version=$go_version
 	fi	
 	ynh_install_app_dependencies $client_pkg_dependencies
