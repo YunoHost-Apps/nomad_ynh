@@ -51,6 +51,7 @@ ynh_script_progression --message="Recreating the dedicated system user..."
 
 # Create the dedicated user (if not existing)
 ynh_system_user_create --username=$app --home_dir="$config_path"
+usermod --home $config_path $app
 
 #=================================================
 # RESTORE THE DATA DIRECTORY

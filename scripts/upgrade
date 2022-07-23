@@ -105,6 +105,7 @@ ynh_script_progression --message="Making sure dedicated system user exists..."
 
 # Create a dedicated user (if not existing)
 ynh_system_user_create --username=$app --home_dir="$config_path"
+usermod --home $config_path $app
 
 #=================================================
 # UPGRADE DEPENDENCIES

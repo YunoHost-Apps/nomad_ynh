@@ -123,6 +123,7 @@ ynh_script_progression --message="Configuring system user..."
 
 # Create a system user
 ynh_system_user_create --username=$app --home_dir="$config_path"
+usermod --home $config_path $app
 
 #=================================================
 # NGINX CONFIGURATION
