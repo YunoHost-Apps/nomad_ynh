@@ -143,7 +143,7 @@ then
 		ynh_use_go
 		export GOPATH="$tempdir/go"
 		export GOCACHE="$tempdir/.cache"
-		$ynh_go build
+		ynh_exec_warn_less $ynh_go build
 	popd
 
 	mv -f $tempdir/nomad-driver-lxd $datadir/plugins/nomad-driver-lxd
