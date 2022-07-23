@@ -181,9 +181,9 @@ then
 	chmod 400 "$config_path/client.hcl"
 	chown $app:$app "$config_path/client.hcl"
 
-	ynh_add_config --template="../conf/lxd.hcl" --destination="$config_path/lxd.hcl"
-	chmod 400 "$config_path/lxd.hcl"
-	chown $app:$app "$config_path/lxd.hcl"
+	ynh_add_config --template="../conf/driver-lxd.hcl" --destination="$config_path/driver-lxd.hcl"
+	chmod 400 "$config_path/driver-lxd.hcl"
+	chown $app:$app "$config_path/driver-lxd.hcl"
 
 	lxd init --auto --storage-backend=dir
 	usermod -a -G lxd $app
