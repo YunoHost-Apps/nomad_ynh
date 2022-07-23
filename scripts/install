@@ -35,9 +35,9 @@ driver_lxc=$YNH_APP_ARG_DRIVER_LXC
 
 app=$YNH_APP_INSTANCE_NAME
 
-lxc_bridge="lxcbr0"
-plage_ip="10.1.44"
-main_iface=$(ip route | grep default | awk '{print $5;}')
+client_lxc_bridge="lxcbr0"
+client_lxc_plage_ip="10.1.44"
+client_lxc_main_iface=$(ip route | grep default | awk '{print $5;}')
 
 #=================================================
 # CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
@@ -59,9 +59,9 @@ ynh_app_setting_set --app=$app --key=bootstrap_expect --value=$bootstrap_expect
 ynh_app_setting_set --app=$app --key=retry_join --value=$retry_join
 ynh_app_setting_set --app=$app --key=server_ip --value=$server_ip
 ynh_app_setting_set --app=$app --key=driver_lxc --value=$driver_lxc
-ynh_app_setting_set --app=$app --key=lxc_bridge --value=$lxc_bridge
-ynh_app_setting_set --app=$app --key=plage_ip --value=$plage_ip
-ynh_app_setting_set --app=$app --key=main_iface --value=$main_iface
+ynh_app_setting_set --app=$app --key=client_lxc_bridge --value=$client_lxc_bridge
+ynh_app_setting_set --app=$app --key=client_lxc_plage_ip --value=$client_lxc_plage_ip
+ynh_app_setting_set --app=$app --key=client_lxc_main_iface --value=$client_lxc_main_iface
 
 #=================================================
 # STANDARD MODIFICATIONS

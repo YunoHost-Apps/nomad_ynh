@@ -119,10 +119,10 @@ if [ "$node_type" == "client" ]
 then	
 	if [ $driver_lxc -eq 1 ]
 	then
-		lxc_bridge=$(ynh_app_setting_get --app=$app --key=lxc_bridge)
-		plage_ip=$(ynh_app_setting_get --app=$app --key=plage_ip)
-		main_iface=$(ip route | grep default | awk '{print $5;}')
-		ynh_app_setting_set --app=$app --key=main_iface --value=$main_iface
+		client_lxc_bridge=$(ynh_app_setting_get --app=$app --key=client_lxc_bridge)
+		client_lxc_plage_ip=$(ynh_app_setting_get --app=$app --key=client_lxc_plage_ip)
+		client_lxc_main_iface=$(ip route | grep default | awk '{print $5;}')
+		ynh_app_setting_set --app=$app --key=client_lxc_main_iface --value=$client_lxc_main_iface
 
 		ynh_add_config --template="../conf/dnsmasq-lxd" --destination="/etc/dnsmasq.d/lxd"
 		systemctl restart dnsmasq
