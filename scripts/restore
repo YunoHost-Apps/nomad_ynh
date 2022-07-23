@@ -49,7 +49,7 @@ ynh_script_progression --message="Validating restoration parameters..."
 ynh_script_progression --message="Recreating the dedicated system user..."
 
 # Create the dedicated user (if not existing)
-ynh_system_user_create --username=$app
+ynh_system_user_create --username=$app --home_dir="$config_path"
 
 #=================================================
 # RESTORE THE DATA DIRECTORY
@@ -110,8 +110,6 @@ if [ "$node_type" == "client" ]
 then
 	lxd init --auto --storage-backend=dir
 	usermod -a -G lxd $app
-	mkdir -p /home/$app
-	chown -R $app /home/$app
 	if ! `su $app -s /bin/bash -c "lxc remote list" | grep "https://devbaseimgs.yunohost.org" 1>/dev/null 2>&1`
 	then
 		su $app -s /bin/bash -c "lxc remote add yunohost https://devbaseimgs.yunohost.org --public --accept-certificate"

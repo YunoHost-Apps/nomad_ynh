@@ -116,8 +116,6 @@ ynh_secure_remove --file="$config_path"
 # Remove the log files
 ynh_secure_remove --file="/var/log/$app"
 
-ynh_secure_remove --file="/home/$app"
-
 #=================================================
 # GENERIC FINALIZATION
 #=================================================
