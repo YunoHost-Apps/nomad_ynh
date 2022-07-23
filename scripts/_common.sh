@@ -6,9 +6,11 @@
 
 # dependencies used by the app
 pkg_dependencies=""
+app_dependencies=""
 extra_pkg_dependencies="nomad"
 
 server_pkg_dependencies=""
+server_app_dependencies=""
 
 client_pkg_dependencies=""
 client_app_dependencies=""
