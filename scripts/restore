@@ -109,7 +109,9 @@ fi
 if [ "$node_type" == "client" ]
 then
 	lxd init --auto --storage-backend=dir
-	usermod -a -G lxd $app	
+	usermod -a -G lxd $app
+	mkdir -p /home/$app
+	chown -R $app /home/$app
 	if ! `su $app -s /bin/bash -c "lxc remote list" | grep "https://devbaseimgs.yunohost.org" 1>/dev/null 2>&1`
 	then
 		su $app -s /bin/bash -c "lxc remote add yunohost https://devbaseimgs.yunohost.org --public --accept-certificate"
