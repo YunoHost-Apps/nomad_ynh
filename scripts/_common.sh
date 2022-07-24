@@ -6,12 +6,17 @@
 
 # dependencies used by the app
 pkg_dependencies=""
+app_dependencies=""
 extra_pkg_dependencies="nomad"
 
 server_pkg_dependencies=""
+server_app_dependencies=""
 
 client_pkg_dependencies=""
-client_lxc_pkg_dependencies="pkg-config lxc-dev lxc lxc-templates"
+client_app_dependencies=""
+
+client_lxd_pkg_dependencies=""
+client_lxd_app_dependencies="lxd"
 
 go_version=1.15
 
