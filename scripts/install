@@ -15,7 +15,7 @@ source /usr/share/yunohost/helpers
 #=================================================
 
 ynh_clean_setup () {
-	ynh_clean_check_starting
+	true
 }
 # Exit if an error occurs during the execution of the script
 ynh_abort_if_errors
@@ -42,7 +42,7 @@ client_lxc_main_iface=$(ip route | grep default | awk '{print $5;}')
 #=================================================
 # CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
 #=================================================
-ynh_script_progression --message="Validating installation parameters..."
+ynh_script_progression --message="Validating installation parameters..." --weight=1
 
 # Register (book) web path
 ynh_webpath_register --app=$app --domain=$domain --path_url=$path_url
@@ -50,7 +50,7 @@ ynh_webpath_register --app=$app --domain=$domain --path_url=$path_url
 #=================================================
 # STORE SETTINGS FROM MANIFEST
 #=================================================
-ynh_script_progression --message="Storing installation settings..."
+ynh_script_progression --message="Storing installation settings..." --weight=1
 
 ynh_app_setting_set --app=$app --key=domain --value=$domain
 ynh_app_setting_set --app=$app --key=path --value=$path_url
@@ -68,7 +68,7 @@ ynh_app_setting_set --app=$app --key=client_lxc_main_iface --value=$client_lxc_m
 #=================================================
 # FIND AND OPEN A PORT
 #=================================================
-ynh_script_progression --message="Finding an available port..."
+ynh_script_progression --message="Finding an available port..." --weight=1
 
 # Find an available port
 http_port=4646
@@ -84,7 +84,7 @@ ynh_port_available --port=$serf_port || ynh_die --message="Port $serf_port is ne
 ynh_app_setting_set --app=$app --key=serf_port --value=$serf_port
 
 # Open the port
-ynh_script_progression --message="Configuring firewall..."
+ynh_script_progression --message="Configuring firewall..." --weight=1
 ynh_exec_warn_less yunohost firewall allow --no-upnp TCP $rpc_port
 needs_exposed_ports="$rpc_port"
 if [ "$node_type" == "server" ]
@@ -96,7 +96,7 @@ fi
 #=================================================
 # INSTALL DEPENDENCIES
 #=================================================
-ynh_script_progression --message="Installing dependencies..."
+ynh_script_progression --message="Installing dependencies..." --weight=1
 
 if [ "$node_type" == "server" ]
 then
@@ -118,7 +118,7 @@ ynh_install_extra_app_dependencies --repo="deb https://apt.releases.hashicorp.co
 #=================================================
 # CREATE DEDICATED USER
 #=================================================
-ynh_script_progression --message="Configuring system user..."
+ynh_script_progression --message="Configuring system user..." --weight=1
 
 # Create a system user
 ynh_system_user_create --username=$app
@@ -126,7 +126,7 @@ ynh_system_user_create --username=$app
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
-ynh_script_progression --message="Configuring NGINX web server..."
+ynh_script_progression --message="Configuring NGINX web server..." --weight=1
 
 # Create a dedicated NGINX config
 ynh_add_nginx_config
@@ -136,7 +136,7 @@ ynh_add_nginx_config
 #=================================================
 # CREATE DATA DIRECTORY
 #=================================================
-ynh_script_progression --message="Creating a data directory..."
+ynh_script_progression --message="Creating a data directory..." --weight=1
 
 datadir=/home/yunohost.app/$app
 ynh_app_setting_set --app=$app --key=datadir --value=$datadir
@@ -178,7 +178,7 @@ fi
 #=================================================
 # ADD A CONFIGURATION
 #=================================================
-ynh_script_progression --message="Adding a configuration file..."
+ynh_script_progression --message="Adding a configuration file..." --weight=1
 
 config_path=/etc/$app.d
 ynh_app_setting_set --app=$app --key=config_path --value=$config_path
@@ -226,7 +226,7 @@ fi
 #=================================================
 # SETUP SYSTEMD
 #=================================================
-ynh_script_progression --message="Configuring a systemd service..."
+ynh_script_progression --message="Configuring a systemd service..." --weight=1
 
 systemd_user=$app
 if [ "$node_type" == "client" ]
@@ -241,7 +241,7 @@ ynh_add_systemd_config
 #=================================================
 # SETUP LOGROTATE
 #=================================================
-ynh_script_progression --message="Configuring log rotation..."
+ynh_script_progression --message="Configuring log rotation..." --weight=1
 
 # Use logrotate to manage application logfile(s)
 ynh_use_logrotate
@@ -249,14 +249,14 @@ ynh_use_logrotate
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST
 #=================================================
-ynh_script_progression --message="Integrating service in YunoHost..."
+ynh_script_progression --message="Integrating service in YunoHost..." --weight=1
 
 yunohost service add $app --log="/var/log/$app/$app.log" --needs_exposed_ports $needs_exposed_ports
 
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Starting a systemd service..."
+ynh_script_progression --message="Starting a systemd service..." --weight=1
 
 # Start a systemd service
 ynh_systemd_action --service_name=$app --action="start" --log_path="/var/log/$app/$app.log" --line_match="Nomad agent started"
@@ -264,7 +264,7 @@ ynh_systemd_action --service_name=$app --action="start" --log_path="/var/log/$ap
 #=================================================
 # SETUP SSOWAT
 #=================================================
-ynh_script_progression --message="Configuring permissions..."
+ynh_script_progression --message="Configuring permissions..." --weight=1
 
 # Make app public if necessary
 if [ $is_public -eq 1 ]
@@ -277,7 +277,7 @@ fi
 #=================================================
 # RELOAD NGINX
 #=================================================
-ynh_script_progression --message="Reloading NGINX web server..."
+ynh_script_progression --message="Reloading NGINX web server..." --weight=1
 
 ynh_systemd_action --service_name=nginx --action=reload
 
@@ -285,4 +285,4 @@ ynh_systemd_action --service_name=nginx --action=reload
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Installation of $app completed"
+ynh_script_progression --message="Installation of $app completed" --last
