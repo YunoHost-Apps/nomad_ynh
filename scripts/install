@@ -219,7 +219,7 @@ then
 		fi
 		ynh_add_config --template="../conf/default.conf" --destination="/etc/lxc/default.conf"
 		systemctl enable lxc-net --quiet
-		ynh_systemd_action --service_name=lxc-net --action="restart" --line_match="Started LXC network bridge" --log_path="systemd"
+		ynh_systemd_action --service_name=lxc-net --action="restart" --line_match="Finished LXC network bridge setup" --log_path="systemd"
 	fi
 fi
 
