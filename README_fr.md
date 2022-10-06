@@ -18,7 +18,7 @@ Si vous n'avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour
 Nomad is a simple and flexible workload orchestrator to deploy and manage containers ([docker](https://www.nomadproject.io/docs/drivers/docker.html), [podman](https://www.nomadproject.io/docs/drivers/podman)), non-containerized applications ([executable](https://www.nomadproject.io/docs/drivers/exec.html), [Java](https://www.nomadproject.io/docs/drivers/java)), and virtual machines ([qemu](https://www.nomadproject.io/docs/drivers/qemu.html)) across on-prem and clouds at scale.
 
 
-**Version incluse :** 1.3.5~ynh1
+**Version incluse :** 1.4.0~ynh1 *(:warning: Il s'agit de la branche `ci-auto-update-v1.4.0`. La [branche `master`](https://github.com/YunoHost-Apps/nomad_ynh/tree/master) utilisée dans le catalogue est actuellement en 1.3.5\~ynh1.)*
 
 
 ## Captures d'écran
