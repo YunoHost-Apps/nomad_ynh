@@ -5,25 +5,25 @@ It shall NOT be edited by hand.
 
 # Nomad pour YunoHost
 
-[![Niveau d'intégration](https://dash.yunohost.org/integration/nomad.svg)](https://dash.yunohost.org/appci/app/nomad) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/nomad.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/nomad.maintain.svg)  
+[![Niveau d’intégration](https://dash.yunohost.org/integration/nomad.svg)](https://dash.yunohost.org/appci/app/nomad) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/nomad.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/nomad.maintain.svg)
+
 [![Installer Nomad avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=nomad)
 
 *[Read this readme in english.](./README.md)*
 
-> *Ce package vous permet d'installer Nomad rapidement et simplement sur un serveur YunoHost.
-Si vous n'avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour savoir comment l'installer et en profiter.*
+> *Ce package vous permet d’installer Nomad rapidement et simplement sur un serveur YunoHost.
+Si vous n’avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour savoir comment l’installer et en profiter.*
 
-## Vue d'ensemble
+## Vue d’ensemble
 
 Nomad is a simple and flexible workload orchestrator to deploy and manage containers ([docker](https://www.nomadproject.io/docs/drivers/docker.html), [podman](https://www.nomadproject.io/docs/drivers/podman)), non-containerized applications ([executable](https://www.nomadproject.io/docs/drivers/exec.html), [Java](https://www.nomadproject.io/docs/drivers/java)), and virtual machines ([qemu](https://www.nomadproject.io/docs/drivers/qemu.html)) across on-prem and clouds at scale.
 
 
-**Version incluse :** 1.3.5~ynh1
+**Version incluse :** 1.3.5~ynh1
 
+## Captures d’écran
 
-## Captures d'écran
-
-![Capture d'écran de Nomad](./doc/screenshots/assets.png)
+![Capture d’écran de Nomad](./doc/screenshots/assets.png)
 
 ## Avertissements / informations importantes
 
@@ -203,9 +203,9 @@ job "job-download-bullseye" {
 
 ## Documentations et ressources
 
-* Site officiel de l'app : <https://www.nomadproject.io/>
-* Documentation officielle de l'admin : <https://www.nomadproject.io/docs>
-* Dépôt de code officiel de l'app : <https://github.com/hashicorp/nomad>
+* Site officiel de l’app : <https://www.nomadproject.io/>
+* Documentation officielle de l’admin : <https://www.nomadproject.io/docs>
+* Dépôt de code officiel de l’app : <https://github.com/hashicorp/nomad>
 * Documentation YunoHost pour cette app : <https://yunohost.org/app_nomad>
 * Signaler un bug : <https://github.com/YunoHost-Apps/nomad_ynh/issues>
 
@@ -221,4 +221,4 @@ ou
 sudo yunohost app upgrade nomad -u https://github.com/YunoHost-Apps/nomad_ynh/tree/testing --debug
 ```
 
-**Plus d'infos sur le packaging d'applications :** <https://yunohost.org/packaging_apps>
+**Plus d’infos sur le packaging d’applications :** <https://yunohost.org/packaging_apps>
