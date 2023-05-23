@@ -13,7 +13,7 @@ server_pkg_dependencies=""
 client_pkg_dependencies=""
 client_lxc_pkg_dependencies="pkg-config lxc-dev lxc lxc-templates"
 
-go_version=1.15
+go_version=1.20
 
 #=================================================
 # PERSONAL HELPERS
