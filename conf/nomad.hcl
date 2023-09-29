@@ -18,7 +18,7 @@
 # default to store temporary allocation data as well as cluster information. Server
 # nodes use this directory to store cluster state, including the replicated log and
 # snapshot data. This option is required to start the Nomad agent. 
-data_dir = "__DATADIR__"
+data_dir = "__DATA_DIR__"
 
 # Controls the verbosity of logs the Nomad agent will output. Valid log levels include
 # WARN, INFO, or DEBUG in increasing order of verbosity. Defaults to INFO. 

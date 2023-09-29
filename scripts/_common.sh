@@ -5,13 +5,13 @@
 #=================================================
 
 # dependencies used by the app (must be on a single line)
-pkg_dependencies=""
-extra_pkg_dependencies="nomad"
+#REMOVEME? pkg_dependencies=""
+#REMOVEME? extra_pkg_dependencies="nomad"
 
-server_pkg_dependencies=""
+#REMOVEME? server_pkg_dependencies=""
 
-client_pkg_dependencies=""
-client_lxc_pkg_dependencies="pkg-config lxc-dev lxc lxc-templates"
+#REMOVEME? client_pkg_dependencies=""
+#REMOVEME? client_lxc_pkg_dependencies="pkg-config lxc-dev lxc lxc-templates"
 
 go_version=1.20
 

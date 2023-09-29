@@ -13,17 +13,17 @@ source /usr/share/yunohost/helpers
 #=================================================
 # LOAD SETTINGS
 #=================================================
-ynh_script_progression --message="Loading installation settings..." --weight=1
+#REMOVEME? ynh_script_progression --message="Loading installation settings..." --weight=1
 
-app=$YNH_APP_INSTANCE_NAME
+#REMOVEME? app=$YNH_APP_INSTANCE_NAME
 
-domain=$(ynh_app_setting_get --app=$app --key=domain)
-config_path=$(ynh_app_setting_get --app=$app --key=config_path)
-datadir=$(ynh_app_setting_get --app=$app --key=datadir)
-node_type=$(ynh_app_setting_get --app=$app --key=node_type)
-driver_lxc=$(ynh_app_setting_get --app=$app --key=driver_lxc)
-rpc_port=$(ynh_app_setting_get --app=$app --key=rpc_port)
-serf_port=$(ynh_app_setting_get --app=$app --key=serf_port)
+#REMOVEME? domain=$(ynh_app_setting_get --app=$app --key=domain)
+#REMOVEME? config_path=$(ynh_app_setting_get --app=$app --key=config_path)
+#REMOVEME? data_dir=$(ynh_app_setting_get --app=$app --key=data_dir)
+#REMOVEME? node_type=$(ynh_app_setting_get --app=$app --key=node_type)
+#REMOVEME? driver_lxc=$(ynh_app_setting_get --app=$app --key=driver_lxc)
+#REMOVEME? rpc_port=$(ynh_app_setting_get --app=$app --key=rpc_port)
+#REMOVEME? serf_port=$(ynh_app_setting_get --app=$app --key=serf_port)
 
 #=================================================
 # STANDARD REMOVE
@@ -84,7 +84,7 @@ then
 	
 	if [ $driver_lxc -eq 1 ]
 	then
-		client_lxc_bridge=$(ynh_app_setting_get --app=$app --key=client_lxc_bridge)
+#REMOVEME? 		client_lxc_bridge=$(ynh_app_setting_get --app=$app --key=client_lxc_bridge)
 
 		ynh_systemd_action --service_name=lxc-net --action="stop"
 		systemctl disable lxc-net --quiet
@@ -98,10 +98,10 @@ fi
 #=================================================
 # REMOVE DEPENDENCIES
 #=================================================
-ynh_script_progression --message="Removing dependencies..." --weight=1
+#REMOVEME? ynh_script_progression --message="Removing dependencies..." --weight=1
 
 # Remove metapackage and its dependencies
-ynh_remove_app_dependencies
+#REMOVEME? ynh_remove_app_dependencies
 if [ "$node_type" == "client" ]
 then
 	if [ $driver_lxc -eq 1 ]
@@ -118,7 +118,7 @@ fi
 if [ "${YNH_APP_PURGE:-0}" -eq 1 ]
 then
 	ynh_script_progression --message="Removing app data directory..." --weight=1
-	ynh_secure_remove --file="$datadir"
+#REMOVEME? 	ynh_secure_remove --file="$data_dir"
 fi
 
 #=================================================
@@ -139,10 +139,10 @@ ynh_secure_remove --file="/var/log/$app"
 #=================================================
 # REMOVE DEDICATED USER
 #=================================================
-ynh_script_progression --message="Removing the dedicated system user..." --weight=1
+#REMOVEME? ynh_script_progression --message="Removing the dedicated system user..." --weight=1
 
 # Delete a system user
-ynh_system_user_delete --username=$app
+#REMOVEME? ynh_system_user_delete --username=$app
 
 #=================================================
 # END OF SCRIPT

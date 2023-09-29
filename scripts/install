@@ -14,26 +14,26 @@ source /usr/share/yunohost/helpers
 # MANAGE SCRIPT FAILURE
 #=================================================
 
-ynh_clean_setup () {
+#REMOVEME? ynh_clean_setup () {
 	true
 }
 # Exit if an error occurs during the execution of the script
-ynh_abort_if_errors
+#REMOVEME? ynh_abort_if_errors
 
 #=================================================
 # RETRIEVE ARGUMENTS FROM THE MANIFEST
 #=================================================
 
-domain=$YNH_APP_ARG_DOMAIN
-path_url="/"
-is_public=$YNH_APP_ARG_IS_PUBLIC
-node_type=$YNH_APP_ARG_NODE_TYPE
-bootstrap_expect=$YNH_APP_ARG_BOOTSTRAP_EXPECT
-retry_join=$YNH_APP_ARG_RETRY_JOIN
-server_ip=$YNH_APP_ARG_SERVER_IP
-driver_lxc=$YNH_APP_ARG_DRIVER_LXC
+#REMOVEME? domain=$YNH_APP_ARG_DOMAIN
+path="/"
+#REMOVEME? is_public=$YNH_APP_ARG_IS_PUBLIC
+#REMOVEME? node_type=$YNH_APP_ARG_NODE_TYPE
+#REMOVEME? bootstrap_expect=$YNH_APP_ARG_BOOTSTRAP_EXPECT
+#REMOVEME? retry_join=$YNH_APP_ARG_RETRY_JOIN
+#REMOVEME? server_ip=$YNH_APP_ARG_SERVER_IP
+#REMOVEME? driver_lxc=$YNH_APP_ARG_DRIVER_LXC
 
-app=$YNH_APP_INSTANCE_NAME
+#REMOVEME? app=$YNH_APP_INSTANCE_NAME
 
 client_lxc_bridge="lxcbr0"
 client_lxc_plage_ip="10.1.44"
@@ -42,18 +42,18 @@ client_lxc_main_iface=$(ip route | grep default | awk '{print $5;}')
 #=================================================
 # CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
 #=================================================
-ynh_script_progression --message="Validating installation parameters..." --weight=1
+#REMOVEME? ynh_script_progression --message="Validating installation parameters..." --weight=1
 
 # Register (book) web path
-ynh_webpath_register --app=$app --domain=$domain --path_url=$path_url
+#REMOVEME? ynh_webpath_register --app=$app --domain=$domain --path=$path
 
 #=================================================
 # STORE SETTINGS FROM MANIFEST
 #=================================================
-ynh_script_progression --message="Storing installation settings..." --weight=1
+#REMOVEME? ynh_script_progression --message="Storing installation settings..." --weight=1
 
-ynh_app_setting_set --app=$app --key=domain --value=$domain
-ynh_app_setting_set --app=$app --key=path --value=$path_url
+#REMOVEME? ynh_app_setting_set --app=$app --key=domain --value=$domain
+#REMOVEME? ynh_app_setting_set --app=$app --key=path --value=$path
 ynh_app_setting_set --app=$app --key=node_type --value=$node_type
 ynh_app_setting_set --app=$app --key=bootstrap_expect --value=$bootstrap_expect
 ynh_app_setting_set --app=$app --key=retry_join --value=$retry_join
@@ -68,20 +68,20 @@ ynh_app_setting_set --app=$app --key=client_lxc_main_iface --value=$client_lxc_m
 #=================================================
 # FIND AND OPEN A PORT
 #=================================================
-ynh_script_progression --message="Finding an available port..." --weight=1
+#REMOVEME? ynh_script_progression --message="Finding an available port..." --weight=1
 
 # Find an available port
 http_port=4646
 ynh_port_available --port=$http_port || ynh_die --message="Port $http_port is needs to be available for this app"
-ynh_app_setting_set --app=$app --key=http_port --value=$http_port
+#REMOVEME? ynh_app_setting_set --app=$app --key=http_port --value=$http_port
 
 rpc_port=4647
 ynh_port_available --port=$rpc_port || ynh_die --message="Port $rpc_port is needs to be available for this app"
-ynh_app_setting_set --app=$app --key=rpc_port --value=$rpc_port
+#REMOVEME? ynh_app_setting_set --app=$app --key=rpc_port --value=$rpc_port
 
 serf_port=4648
 ynh_port_available --port=$serf_port || ynh_die --message="Port $serf_port is needs to be available for this app"
-ynh_app_setting_set --app=$app --key=serf_port --value=$serf_port
+#REMOVEME? ynh_app_setting_set --app=$app --key=serf_port --value=$serf_port
 
 # Open the port
 ynh_script_progression --message="Configuring firewall..." --weight=1
@@ -96,32 +96,32 @@ fi
 #=================================================
 # INSTALL DEPENDENCIES
 #=================================================
-ynh_script_progression --message="Installing dependencies..." --weight=1
+#REMOVEME? ynh_script_progression --message="Installing dependencies..." --weight=1
 
 if [ "$node_type" == "server" ]
 then
-	pkg_dependencies="$pkg_dependencies $server_pkg_dependencies"
+#REMOVEME? 	pkg_dependencies="$pkg_dependencies $server_pkg_dependencies"
 fi
 
 if [ "$node_type" == "client" ]
 then
 	if [ $driver_lxc -eq 1 ]
 	then
-		client_pkg_dependencies="$client_pkg_dependencies $client_lxc_pkg_dependencies"
+#REMOVEME? 		client_pkg_dependencies="$client_pkg_dependencies $client_lxc_pkg_dependencies"
 		ynh_exec_warn_less ynh_install_go --go_version=$go_version
 	fi	
-	pkg_dependencies="$pkg_dependencies $client_pkg_dependencies"
+#REMOVEME? 	pkg_dependencies="$pkg_dependencies $client_pkg_dependencies"
 fi
-ynh_install_app_dependencies $pkg_dependencies
-ynh_install_extra_app_dependencies --repo="deb https://apt.releases.hashicorp.com $(lsb_release -cs) main" --package="$extra_pkg_dependencies" --key="https://apt.releases.hashicorp.com/gpg"
+#REMOVEME? ynh_install_app_dependencies $pkg_dependencies
+#REMOVEME? ynh_install_extra_app_dependencies --repo="deb https://apt.releases.hashicorp.com $(lsb_release -cs) main" --package="$extra_pkg_dependencies" --key="https://apt.releases.hashicorp.com/gpg"
 
 #=================================================
 # CREATE DEDICATED USER
 #=================================================
-ynh_script_progression --message="Configuring system user..." --weight=1
+#REMOVEME? ynh_script_progression --message="Configuring system user..." --weight=1
 
 # Create a system user
-ynh_system_user_create --username=$app
+#REMOVEME? ynh_system_user_create --username=$app
 
 #=================================================
 # NGINX CONFIGURATION
@@ -138,15 +138,15 @@ ynh_add_nginx_config
 #=================================================
 ynh_script_progression --message="Creating a data directory..." --weight=1
 
-datadir=/home/yunohost.app/$app
-ynh_app_setting_set --app=$app --key=datadir --value=$datadir
+#REMOVEME? data_dir=/home/yunohost.app/$app
+#REMOVEME? ynh_app_setting_set --app=$app --key=data_dir --value=$data_dir
 
-mkdir -p $datadir
-mkdir -p $datadir/plugins
+mkdir -p $data_dir
+mkdir -p $data_dir/plugins
 
-chmod 750 "$datadir"
-chmod -R o-rwx "$datadir"
-chown -R $app:$app "$datadir"
+chmod 750 "$data_dir"
+chmod -R o-rwx "$data_dir"
+chown -R $app:$app "$data_dir"
 
 #=================================================
 # BUILD DRIVERS
@@ -162,14 +162,14 @@ then
 		ynh_setup_source --dest_dir="$tempdir" --source_id="driver-lxc"
 
 		pushd $tempdir
-			final_path=$tempdir
+#REMOVEME? 			install_dir=$tempdir
 			ynh_use_go
 			export GOPATH="$tempdir/go"
 			export GOCACHE="$tempdir/.cache"
 			ynh_exec_warn_less $ynh_go build
 		popd
 
-		mv -f $tempdir/nomad-driver-lxc $datadir/plugins/nomad-driver-lxc
+		mv -f $tempdir/nomad-driver-lxc $data_dir/plugins/nomad-driver-lxc
 
 		ynh_secure_remove --file="$tempdir"
 	fi
@@ -181,7 +181,7 @@ fi
 ynh_script_progression --message="Adding a configuration file..." --weight=1
 
 config_path=/etc/$app.d
-ynh_app_setting_set --app=$app --key=config_path --value=$config_path
+#REMOVEME? ynh_app_setting_set --app=$app --key=config_path --value=$config_path
 
 mkdir -p $config_path
 chmod 750 "$config_path"
@@ -264,22 +264,22 @@ ynh_systemd_action --service_name=$app --action="start" --log_path="/var/log/$ap
 #=================================================
 # SETUP SSOWAT
 #=================================================
-ynh_script_progression --message="Configuring permissions..." --weight=1
+#REMOVEME? ynh_script_progression --message="Configuring permissions..." --weight=1
 
 # Make app public if necessary
-if [ $is_public -eq 1 ]
+#REMOVEME? if [ $is_public -eq 1 ]
 then
 	# Everyone can access the app.
 	# The "main" permission is automatically created before the install script.
-	ynh_permission_update --permission="main" --add="visitors"
+#REMOVEME? 	ynh_permission_update --permission="main" --add="visitors"
 fi
 
 #=================================================
 # RELOAD NGINX
 #=================================================
-ynh_script_progression --message="Reloading NGINX web server..." --weight=1
+#REMOVEME? ynh_script_progression --message="Reloading NGINX web server..." --weight=1
 
-ynh_systemd_action --service_name=nginx --action=reload
+#REMOVEME? ynh_systemd_action --service_name=nginx --action=reload
 
 #=================================================
 # END OF SCRIPT
