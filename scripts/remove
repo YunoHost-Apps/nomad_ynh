@@ -11,21 +11,6 @@ source ynh_install_go
 source /usr/share/yunohost/helpers
 
 #=================================================
-# LOAD SETTINGS
-#=================================================
-#REMOVEME? ynh_script_progression --message="Loading installation settings..." --weight=1
-
-#REMOVEME? app=$YNH_APP_INSTANCE_NAME
-
-#REMOVEME? domain=$(ynh_app_setting_get --app=$app --key=domain)
-#REMOVEME? config_path=$(ynh_app_setting_get --app=$app --key=config_path)
-#REMOVEME? data_dir=$(ynh_app_setting_get --app=$app --key=data_dir)
-#REMOVEME? node_type=$(ynh_app_setting_get --app=$app --key=node_type)
-#REMOVEME? driver_lxc=$(ynh_app_setting_get --app=$app --key=driver_lxc)
-#REMOVEME? rpc_port=$(ynh_app_setting_get --app=$app --key=rpc_port)
-#REMOVEME? serf_port=$(ynh_app_setting_get --app=$app --key=serf_port)
-
-#=================================================
 # STANDARD REMOVE
 #=================================================
 # REMOVE SERVICE INTEGRATION IN YUNOHOST
@@ -38,46 +23,17 @@ then
 	yunohost service remove $app
 fi
 
-#=================================================
-# STOP AND REMOVE SERVICE
-#=================================================
-ynh_script_progression --message="Stopping and removing the systemd service..." --weight=1
-
 ynh_exec_warn_less nomad node drain -self -enable
+
 # Remove the dedicated systemd config
 ynh_remove_systemd_config
-
-#=================================================
-# REMOVE LOGROTATE CONFIGURATION
-#=================================================
-ynh_script_progression --message="Removing logrotate configuration..." --weight=1
 
 # Remove the app-specific logrotate config
 ynh_remove_logrotate
 
-#=================================================
-# REMOVE NGINX CONFIGURATION
-#=================================================
-ynh_script_progression --message="Removing NGINX web server configuration..." --weight=1
-
 # Remove the dedicated NGINX config
 ynh_remove_nginx_config
 
-#=================================================
-# CLOSE A PORT
-#=================================================
-
-if yunohost firewall list | grep -q "\- $rpc_port$"
-then
-	ynh_script_progression --message="Closing port $rpc_port..." --weight=1
-	ynh_exec_warn_less yunohost firewall disallow TCP $rpc_port
-fi
-
-if yunohost firewall list | grep -q "\- $serf_port$"
-then
-	ynh_script_progression --message="Closing port $serf_port..." --weight=1
-	ynh_exec_warn_less yunohost firewall disallow TCP $serf_port
-fi
 
 if [ "$node_type" == "client" ]
 then
@@ -111,17 +67,6 @@ then
 fi
 
 #=================================================
-# REMOVE DATA DIR
-#=================================================
-
-# Remove the data directory if --purge option is used
-if [ "${YNH_APP_PURGE:-0}" -eq 1 ]
-then
-	ynh_script_progression --message="Removing app data directory..." --weight=1
-#REMOVEME? 	ynh_secure_remove --file="$data_dir"
-fi
-
-#=================================================
 # SPECIFIC REMOVE
 #=================================================
 # REMOVE VARIOUS FILES
@@ -133,16 +78,6 @@ ynh_secure_remove --file="$config_path"
 
 # Remove the log files
 ynh_secure_remove --file="/var/log/$app"
-
-#=================================================
-# GENERIC FINALIZATION
-#=================================================
-# REMOVE DEDICATED USER
-#=================================================
-#REMOVEME? ynh_script_progression --message="Removing the dedicated system user..." --weight=1
-
-# Delete a system user
-#REMOVEME? ynh_system_user_delete --username=$app
 
 #=================================================
 # END OF SCRIPT
