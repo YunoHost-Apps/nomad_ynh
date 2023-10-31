@@ -5,7 +5,8 @@ It shall NOT be edited by hand.
 
 # Nomad for YunoHost
 
-[![Integration level](https://dash.yunohost.org/integration/nomad.svg)](https://dash.yunohost.org/appci/app/nomad) ![Working status](https://ci-apps.yunohost.org/ci/badges/nomad.status.svg) ![Maintenance status](https://ci-apps.yunohost.org/ci/badges/nomad.maintain.svg)  
+[![Integration level](https://dash.yunohost.org/integration/nomad.svg)](https://dash.yunohost.org/appci/app/nomad) ![Working status](https://ci-apps.yunohost.org/ci/badges/nomad.status.svg) ![Maintenance status](https://ci-apps.yunohost.org/ci/badges/nomad.maintain.svg)
+
 [![Install Nomad with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=nomad)
 
 *[Lire ce readme en français.](./README_fr.md)*
@@ -19,7 +20,6 @@ Nomad is a simple and flexible workload orchestrator to deploy and manage contai
 
 
 **Shipped version:** 1.3.5~ynh1
-
 
 ## Screenshots
 
@@ -206,7 +206,7 @@ job "job-download-bullseye" {
 * Official app website: <https://www.nomadproject.io/>
 * Official admin documentation: <https://www.nomadproject.io/docs>
 * Upstream app code repository: <https://github.com/hashicorp/nomad>
-* YunoHost documentation for this app: <https://yunohost.org/app_nomad>
+* YunoHost Store: <https://apps.yunohost.org/app/nomad>
 * Report a bug: <https://github.com/YunoHost-Apps/nomad_ynh/issues>
 
 ## Developer info
