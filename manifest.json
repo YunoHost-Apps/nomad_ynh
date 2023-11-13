@@ -50,7 +50,7 @@
             },
             {
                 "name": "bootstrap_expect",
-                "type": "string",
+                "type": "select",
                 "ask": {
                     "en": "[Server only] How many server nodes to wait for before bootstrapping ?"
                 },
