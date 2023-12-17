@@ -38,7 +38,7 @@
             },
             {
                 "name": "node_type",
-                "type": "string",
+                "type": "select",
                 "ask": {
                     "en": "What kind of Nomad node you want to install ?"
                 },
