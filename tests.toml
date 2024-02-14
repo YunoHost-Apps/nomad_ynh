@@ -1,0 +1,18 @@
+#:schema https://raw.githubusercontent.com/YunoHost/apps/master/schemas/tests.v1.schema.json
+
+test_format = 1.0
+
+[default]
+
+    args.node_type = "server"
+    args.retry_join = "192.168.1.100"
+    args.server_ip = "none..."
+
+    # FIXME:
+    # test_upgrade_from.
+
+[tests_as_client]
+
+    args.node_type = "client"
+    args.retry_join = "192.168.1.100"
+    args.server_ip = "192.168.1.100"

@@ -11,89 +11,22 @@ source ../settings/scripts/_common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# MANAGE SCRIPT FAILURE
+# RESTORE THE APP MAIN DIR
 #=================================================
+ynh_script_progression --message="Restoring the app main directory..." --weight=1
 
-ynh_clean_setup () {
-	true
-}
-# Exit if an error occurs during the execution of the script
-ynh_abort_if_errors
+ynh_restore_file --origin_path="$install_dir"
 
-#=================================================
-# LOAD SETTINGS
-#=================================================
-ynh_script_progression --message="Loading installation settings..." --weight=1
-
-app=$YNH_APP_INSTANCE_NAME
-
-domain=$(ynh_app_setting_get --app=$app --key=domain)
-path_url=$(ynh_app_setting_get --app=$app --key=path)
-config_path=$(ynh_app_setting_get --app=$app --key=config_path)
-datadir=$(ynh_app_setting_get --app=$app --key=datadir)
-node_type=$(ynh_app_setting_get --app=$app --key=node_type)
-driver_lxc=$(ynh_app_setting_get --app=$app --key=driver_lxc)
-http_port=$(ynh_app_setting_get --app=$app --key=http_port)
-rpc_port=$(ynh_app_setting_get --app=$app --key=rpc_port)
-serf_port=$(ynh_app_setting_get --app=$app --key=serf_port)
-
-#=================================================
-# CHECK IF THE APP CAN BE RESTORED
-#=================================================
-ynh_script_progression --message="Validating restoration parameters..." --weight=1
-
-#=================================================
-# STANDARD RESTORATION STEPS
-#=================================================
-# RECREATE THE DEDICATED USER
-#=================================================
-ynh_script_progression --message="Recreating the dedicated system user..." --weight=1
-
-# Create the dedicated user (if not existing)
-ynh_system_user_create --username=$app
+chown -R "$app:$app" "$install_dir"
 
 #=================================================
 # RESTORE THE DATA DIRECTORY
 #=================================================
 ynh_script_progression --message="Restoring the data directory..." --weight=1
 
-ynh_restore_file --origin_path="$datadir" --not_mandatory
+ynh_restore_file --origin_path="$data_dir" --not_mandatory
 
-mkdir -p $datadir
-
-chmod 750 "$datadir"
-chmod -R o-rwx "$datadir"
-chown -R $app:$app "$datadir"
-
-#=================================================
-# SPECIFIC RESTORATION
-#=================================================
-# REINSTALL DEPENDENCIES
-#=================================================
-ynh_script_progression --message="Reinstalling dependencies..." --weight=1
-
-if [ "$node_type" == "server" ]
-then
-	pkg_dependencies="$pkg_dependencies $server_pkg_dependencies"
-fi
-
-if [ "$node_type" == "client" ]
-then
-	if [ $driver_lxc -eq 1 ]
-	then
-		client_pkg_dependencies="$client_pkg_dependencies $client_lxc_pkg_dependencies"
-	fi	
-	pkg_dependencies="$pkg_dependencies $client_pkg_dependencies"
-fi
-ynh_install_app_dependencies $pkg_dependencies
-ynh_install_extra_app_dependencies --repo="deb https://apt.releases.hashicorp.com $(lsb_release -cs) main" --package="$extra_pkg_dependencies" --key="https://apt.releases.hashicorp.com/gpg"
-
-#=================================================
-# RESTORE THE NGINX CONFIGURATION
-#=================================================
-ynh_script_progression --message="Restoring the NGINX web server configuration..." --weight=1
-
-ynh_restore_file --origin_path="/etc/nginx/conf.d/$domain.d/$app.conf"
+chown -R "$app:$app" "$data_dir"
 
 #=================================================
 # RESTORE VARIOUS FILES
@@ -102,72 +35,48 @@ ynh_script_progression --message="Restoring various files..." --weight=1
 
 ynh_restore_file --origin_path="$config_path"
 
-chmod 750 "$config_path"
-chmod -R o-rwx "$config_path"
-chown -R $app:$app "$config_path"
+chmod -R go-rwx,u-w "$config_path"
+chown -R "$app:$app" "$config_path"
 
-# Open the port
-ynh_script_progression --message="Configuring firewall..."
-ynh_exec_warn_less yunohost firewall allow --no-upnp TCP $rpc_port
-needs_exposed_ports="$rpc_port"
-if [ "$node_type" == "server" ]
-then
-	ynh_exec_warn_less yunohost firewall allow --no-upnp TCP $serf_port
-	needs_exposed_ports="$serf_port $needs_exposed_ports"
-fi
+if [ "$node_type" == "client" ]; then
+    if [ "$driver_lxc" -eq 1 ]; then
+        client_lxc_main_iface=$(ip route | grep default | awk '{print $5;}')
+        ynh_app_setting_set --app="$app" --key=client_lxc_main_iface --value="$client_lxc_main_iface"
 
-if [ "$node_type" == "client" ]
-then	
-	if [ $driver_lxc -eq 1 ]
-	then
-		client_lxc_bridge=$(ynh_app_setting_get --app=$app --key=client_lxc_bridge)
-		client_lxc_plage_ip=$(ynh_app_setting_get --app=$app --key=client_lxc_plage_ip)
-		client_lxc_main_iface=$(ip route | grep default | awk '{print $5;}')
-		ynh_app_setting_set --app=$app --key=client_lxc_main_iface --value=$client_lxc_main_iface
+        ynh_add_config --template="dnsmasq-lxd" --destination="/etc/dnsmasq.d/lxd"
+        systemctl restart dnsmasq
 
-		ynh_add_config --template="../conf/dnsmasq-lxd" --destination="/etc/dnsmasq.d/lxd"
-		systemctl restart dnsmasq
-
-		if [ ! ${PACKAGE_CHECK_EXEC:-0} -eq 1 ]; then
-			ynh_add_config --template="../conf/lxc-net" --destination="/etc/default/lxc-net"
-		fi
-		ynh_secure_remove --file="/etc/lxc/default.conf"
-		ynh_add_config --template="../conf/default.conf" --destination="/etc/lxc/default.conf"
-		systemctl enable lxc-net --quiet
-		ynh_systemd_action --service_name=lxc-net --action="restart" --line_match="Finished LXC network bridge setup" --log_path="systemd"
-	fi
+        if [ ! "${PACKAGE_CHECK_EXEC:-0}" -eq 1 ]; then
+            ynh_add_config --template="lxc-net" --destination="/etc/default/lxc-net"
+        fi
+        ynh_secure_remove --file="/etc/lxc/default.conf"
+        ynh_add_config --template="default.conf" --destination="/etc/lxc/default.conf"
+        systemctl enable lxc-net --quiet
+        ynh_systemd_action --service_name=lxc-net --action="restart" --line_match="Finished LXC network bridge setup" --log_path="systemd"
+    fi
 fi
 
 #=================================================
-# RESTORE SYSTEMD
+# RESTORE SYSTEM CONFIGURATIONS
 #=================================================
-ynh_script_progression --message="Restoring the systemd configuration..." --weight=1
+ynh_script_progression --message="Restoring system configurations related to $app..." --weight=1
+
+ynh_restore_file --origin_path="/etc/nginx/conf.d/$domain.d/$app.conf"
 
 ynh_restore_file --origin_path="/etc/systemd/system/$app.service"
-systemctl enable $app.service --quiet
+systemctl enable "$app.service" --quiet
+yunohost service add "$app" --log="/var/log/$app/$app.log" --needs_exposed_ports="$port_rpc $port_serf"
 
-#=================================================
-# RESTORE THE LOGROTATE CONFIGURATION
-#=================================================
-ynh_script_progression --message="Restoring the logrotate configuration..." --weight=1
-
-mkdir -p /var/log/$app
-chown -R $app:$app "/var/log/$app"
 ynh_restore_file --origin_path="/etc/logrotate.d/$app"
 
-#=================================================
-# INTEGRATE SERVICE IN YUNOHOST
-#=================================================
-ynh_script_progression --message="Integrating service in YunoHost..." --weight=1
-
-yunohost service add $app --log="/var/log/$app/$app.log" --needs_exposed_ports $needs_exposed_ports
+ynh_restore_file --origin_path="/var/log/$app/"
 
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
 ynh_script_progression --message="Starting a systemd service..." --weight=1
 
-ynh_systemd_action --service_name=$app --action="start" --log_path="/var/log/$app/$app.log" --line_match="Nomad agent started"
+ynh_systemd_action --service_name="$app" --action="start" --log_path="/var/log/$app/$app.log" --line_match="Nomad agent started"
 
 #=================================================
 # GENERIC FINALIZATION
