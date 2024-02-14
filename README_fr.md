@@ -202,11 +202,11 @@ job "job-download-bullseye" {
 
 ## Documentations et ressources
 
-- Site officiel de l’app : <https://www.nomadproject.io/>
-- Documentation officielle de l’admin : <https://www.nomadproject.io/docs>
-- Dépôt de code officiel de l’app : <https://github.com/hashicorp/nomad>
-- YunoHost Store : <https://apps.yunohost.org/app/nomad>
-- Signaler un bug : <https://github.com/YunoHost-Apps/nomad_ynh/issues>
+* Site officiel de l’app : <https://www.nomadproject.io>
+* Documentation officielle de l’admin : <https://www.nomadproject.io/docs>
+* Dépôt de code officiel de l’app : <https://github.com/hashicorp/nomad>
+* YunoHost Store: <https://apps.yunohost.org/app/nomad>
+* Signaler un bug : <https://github.com/YunoHost-Apps/nomad_ynh/issues>
 
 ## Informations pour les développeurs
 
