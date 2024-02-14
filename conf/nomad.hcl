@@ -39,7 +39,7 @@ enable_debug = false
 
 # Controls the network ports used for different services required by the Nomad agent.
 ports {
-    # The port used to run the HTTP server. Applies to both client and server nodes. Defaults to __HTTP_PORT__.
+    # The port used to run the HTTP server. Applies to both client and server nodes. Defaults to __PORT__.
     http = __PORT__
 
     # The port used for internal RPC communication between agents and servers, and for inter-server
