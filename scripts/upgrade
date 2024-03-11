@@ -123,7 +123,7 @@ then
 		ynh_script_progression --message="Building LXC driver..." --weight=1
 
 		tempdir="$(mktemp -d)"
-		ynh_setup_source --dest_dir="$tempdir" --source_id="driver-lxc"
+		ynh_setup_source --dest_dir="$tempdir" --source_id="driver-lxc" --full_replace=1
 
 		pushd $tempdir
 			final_path=$tempdir
