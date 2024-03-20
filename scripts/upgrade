@@ -24,13 +24,13 @@ ynh_systemd_action --service_name="$app" --action="stop" --log_path="/var/log/$a
 # BUILD DRIVERS
 #=================================================
 if [ "$node_type" == "client" ] && [ "$driver_lxc" -eq 1 ]; then
-    ynh_script_progression --message="Building LXC driver..."
-
+    ynh_script_progression --message="Installing Go..."
     ynh_exec_warn_less ynh_install_go --go_version="$go_version"
+    ynh_use_go
 
+    ynh_script_progression --message="Building LXC driver..."
     ynh_setup_source --dest_dir="$install_dir/driver_lxc" --source_id="driver_lxc"
     pushd "$install_dir/driver_lxc"
-        ynh_use_go
         export GOPATH="$install_dir/driver_lxc/go"
         export GOCACHE="$install_dir/driver_lxc/.cache"
         ynh_exec_warn_less "$ynh_go" build
