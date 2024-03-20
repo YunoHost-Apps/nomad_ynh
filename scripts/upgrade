@@ -81,7 +81,7 @@ case "$node_type" in
     server) systemd_user="$app" ;;
 esac
 ynh_add_systemd_config
-yunohost service add "$app" --log="/var/log/$app/$app.log" --needs_exposed_ports="$port_rpc $port_serf"
+yunohost service add "$app" --log="/var/log/$app/$app.log" --needs_exposed_ports "$port_rpc" "$port_serf"
 
 # Use logrotate to manage app-specific logfile(s)
 ynh_use_logrotate --non-append
