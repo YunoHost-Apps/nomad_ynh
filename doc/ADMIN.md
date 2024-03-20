@@ -73,7 +73,7 @@ job "job-stretch" {
         log_level = "info"
         verbosity = "verbose"
         template  = "/usr/share/lxc/templates/lxc-debian"
-		template_args = ["--release=stretch"]
+        template_args = ["--release=stretch"]
       }
 
       resources {
@@ -102,7 +102,7 @@ job "job-buster" {
         log_level = "info"
         verbosity = "verbose"
         template  = "/usr/share/lxc/templates/lxc-debian"
-		template_args = ["--release=buster"]
+        template_args = ["--release=buster"]
       }
 
       resources {
@@ -131,7 +131,7 @@ job "job-download-buster" {
         log_level = "info"
         verbosity = "verbose"
         template  = "/usr/share/lxc/templates/lxc-download"
-		template_args = ["--dist=debian","--release=buster","--arch=amd64","--keyserver=hkp://keyserver.ubuntu.com"]
+        template_args = ["--dist=debian","--release=buster","--arch=amd64","--keyserver=hkp://keyserver.ubuntu.com"]
       }
 
       resources {
@@ -160,7 +160,7 @@ job "job-download-bullseye" {
         log_level = "info"
         verbosity = "verbose"
         template  = "/usr/share/lxc/templates/lxc-download"
-		template_args = ["--dist=debian","--release=bullseye","--arch=amd64","--keyserver=hkp://keyserver.ubuntu.com"]
+        template_args = ["--dist=debian","--release=bullseye","--arch=amd64","--keyserver=hkp://keyserver.ubuntu.com"]
       }
 
       resources {
