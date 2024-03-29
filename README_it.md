@@ -1,31 +1,31 @@
 <!--
-Nota bene : ce README est automatiquement généré par <https://github.com/YunoHost/apps/tree/master/tools/readme_generator>
-Il NE doit PAS être modifié à la main.
+N.B.: Questo README è stato automaticamente generato da <https://github.com/YunoHost/apps/tree/master/tools/readme_generator>
+NON DEVE essere modificato manualmente.
 -->
 
-# Nomad pour YunoHost
+# Nomad per YunoHost
 
-[![Niveau d’intégration](https://dash.yunohost.org/integration/nomad.svg)](https://dash.yunohost.org/appci/app/nomad) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/nomad.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/nomad.maintain.svg)
+[![Livello di integrazione](https://dash.yunohost.org/integration/nomad.svg)](https://dash.yunohost.org/appci/app/nomad) ![Stato di funzionamento](https://ci-apps.yunohost.org/ci/badges/nomad.status.svg) ![Stato di manutenzione](https://ci-apps.yunohost.org/ci/badges/nomad.maintain.svg)
 
-[![Installer Nomad avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=nomad)
+[![Installa Nomad con YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=nomad)
 
-*[Lire le README dans d'autres langues.](./ALL_README.md)*
+*[Leggi questo README in altre lingue.](./ALL_README.md)*
 
-> *Ce package vous permet d’installer Nomad rapidement et simplement sur un serveur YunoHost.*  
-> *Si vous n’avez pas YunoHost, consultez [ce guide](https://yunohost.org/install) pour savoir comment l’installer et en profiter.*
+> *Questo pacchetto ti permette di installare Nomad su un server YunoHost in modo semplice e veloce.*  
+> *Se non hai YunoHost, consulta [la guida](https://yunohost.org/install) per imparare a installarlo.*
 
-## Vue d’ensemble
+## Panoramica
 
 Nomad is a simple and flexible workload orchestrator to deploy and manage containers ([docker](https://www.nomadproject.io/docs/drivers/docker.html), [podman](https://www.nomadproject.io/docs/drivers/podman)), non-containerized applications ([executable](https://www.nomadproject.io/docs/drivers/exec.html), [Java](https://www.nomadproject.io/docs/drivers/java)), and virtual machines ([qemu](https://www.nomadproject.io/docs/drivers/qemu.html)) across on-prem and clouds at scale.
 
 
-**Version incluse :** 1.3.5~ynh1
+**Versione pubblicata:** 1.3.5~ynh1
 
-## Captures d’écran
+## Screenshot
 
-![Capture d’écran de Nomad](./doc/screenshots/assets.png)
+![Screenshot di Nomad](./doc/screenshots/assets.png)
 
-## Avertissements / informations importantes
+## Attenzione/informazioni importanti
 
 ## Some Nomad Job examples
 
@@ -201,24 +201,24 @@ job "job-download-bullseye" {
 }
 ```
 
-## Documentations et ressources
+## Documentazione e risorse
 
-- Site officiel de l’app : <https://www.nomadproject.io/>
-- Documentation officielle de l’admin : <https://www.nomadproject.io/docs>
-- Dépôt de code officiel de l’app : <https://github.com/hashicorp/nomad>
-- YunoHost Store : <https://apps.yunohost.org/app/nomad>
-- Signaler un bug : <https://github.com/YunoHost-Apps/nomad_ynh/issues>
+- Sito web ufficiale dell’app: <https://www.nomadproject.io/>
+- Documentazione ufficiale per gli amministratori: <https://www.nomadproject.io/docs>
+- Repository upstream del codice dell’app: <https://github.com/hashicorp/nomad>
+- Store di YunoHost: <https://apps.yunohost.org/app/nomad>
+- Segnala un problema: <https://github.com/YunoHost-Apps/nomad_ynh/issues>
 
-## Informations pour les développeurs
+## Informazioni per sviluppatori
 
-Merci de faire vos pull request sur la [branche `testing`](https://github.com/YunoHost-Apps/nomad_ynh/tree/testing).
+Si prega di inviare la tua pull request alla [branch di `testing`](https://github.com/YunoHost-Apps/nomad_ynh/tree/testing).
 
-Pour essayer la branche `testing`, procédez comme suit :
+Per provare la branch di `testing`, si prega di procedere in questo modo:
 
 ```bash
 sudo yunohost app install https://github.com/YunoHost-Apps/nomad_ynh/tree/testing --debug
-ou
+o
 sudo yunohost app upgrade nomad -u https://github.com/YunoHost-Apps/nomad_ynh/tree/testing --debug
 ```
 
-**Plus d’infos sur le packaging d’applications :** <https://yunohost.org/packaging_apps>
+**Maggiori informazioni riguardo il pacchetto di quest’app:** <https://yunohost.org/packaging_apps>
