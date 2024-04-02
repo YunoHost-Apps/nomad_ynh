@@ -1,31 +1,31 @@
 <!--
-NOTA: Este README foi creado automáticamente por <https://github.com/YunoHost/apps/tree/master/tools/readme_generator>
-NON debe editarse manualmente.
+Ohart ongi: README hau automatikoki sortu da <https://github.com/YunoHost/apps/tree/master/tools/readme_generator>ri esker
+EZ editatu eskuz.
 -->
 
-# Nomad para YunoHost
+# Nomad YunoHost-erako
 
-[![Nivel de integración](https://dash.yunohost.org/integration/nomad.svg)](https://dash.yunohost.org/appci/app/nomad) ![Estado de funcionamento](https://ci-apps.yunohost.org/ci/badges/nomad.status.svg) ![Estado de mantemento](https://ci-apps.yunohost.org/ci/badges/nomad.maintain.svg)
+[![Integrazio maila](https://dash.yunohost.org/integration/nomad.svg)](https://dash.yunohost.org/appci/app/nomad) ![Funtzionamendu egoera](https://ci-apps.yunohost.org/ci/badges/nomad.status.svg) ![Mantentze egoera](https://ci-apps.yunohost.org/ci/badges/nomad.maintain.svg)
 
-[![Instalar Nomad con YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=nomad)
+[![Instalatu Nomad YunoHost-ekin](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=nomad)
 
-*[Le este README en outros idiomas.](./ALL_README.md)*
+*[Irakurri README hau beste hizkuntzatan.](./ALL_README.md)*
 
-> *Este paquete permíteche instalar Nomad de xeito rápido e doado nun servidor YunoHost.*  
-> *Se non usas YunoHost, le a [documentación](https://yunohost.org/install) para saber como instalalo.*
+> *Pakete honek Nomad YunoHost zerbitzari batean azkar eta zailtasunik gabe instalatzea ahalbidetzen dizu.*  
+> *YunoHost ez baduzu, kontsultatu [gida](https://yunohost.org/install) nola instalatu ikasteko.*
 
-## Vista xeral
+## Aurreikuspena
 
 Nomad is a simple and flexible workload orchestrator to deploy and manage containers ([docker](https://www.nomadproject.io/docs/drivers/docker.html), [podman](https://www.nomadproject.io/docs/drivers/podman)), non-containerized applications ([executable](https://www.nomadproject.io/docs/drivers/exec.html), [Java](https://www.nomadproject.io/docs/drivers/java)), and virtual machines ([qemu](https://www.nomadproject.io/docs/drivers/qemu.html)) across on-prem and clouds at scale.
 
 
-**Versión proporcionada:** 1.7.6~ynh1
+**Paketatutako bertsioa:** 1.7.6~ynh1
 
-## Capturas de pantalla
+## Pantaila-argazkiak
 
-![Captura de pantalla de Nomad](./doc/screenshots/assets.png)
+![Nomad(r)en pantaila-argazkia](./doc/screenshots/assets.png)
 
-## Avisos / información importante
+## Ezespena / informazio garrantzitsua
 
 ## Some Nomad Job examples
 
@@ -201,24 +201,24 @@ job "job-download-bullseye" {
 }
 ```
 
-## Documentación e recursos
+## Dokumentazioa eta baliabideak
 
-- Web oficial da app: <https://www.nomadproject.io/>
-- Documentación oficial para admin: <https://www.nomadproject.io/docs>
-- Repositorio de orixe do código: <https://github.com/hashicorp/nomad>
-- Tenda YunoHost: <https://apps.yunohost.org/app/nomad>
-- Informar dun problema: <https://github.com/YunoHost-Apps/nomad_ynh/issues>
+- Aplikazioaren webgune ofiziala: <https://www.nomadproject.io/>
+- Administratzaileen dokumentazio ofiziala: <https://www.nomadproject.io/docs>
+- Jatorrizko aplikazioaren kode-gordailua: <https://github.com/hashicorp/nomad>
+- YunoHost Denda: <https://apps.yunohost.org/app/nomad>
+- Eman errore baten berri: <https://github.com/YunoHost-Apps/nomad_ynh/issues>
 
-## Info de desenvolvemento
+## Garatzaileentzako informazioa
 
-Envía a túa colaboración á [rama `testing`](https://github.com/YunoHost-Apps/nomad_ynh/tree/testing).
+Bidali `pull request`a [`testing` abarrera](https://github.com/YunoHost-Apps/nomad_ynh/tree/testing).
 
-Para probar a rama `testing`, procede deste xeito:
+`testing` abarra probatzeko, ondorengoa egin:
 
 ```bash
 sudo yunohost app install https://github.com/YunoHost-Apps/nomad_ynh/tree/testing --debug
-ou
+edo
 sudo yunohost app upgrade nomad -u https://github.com/YunoHost-Apps/nomad_ynh/tree/testing --debug
 ```
 
-**Máis info sobre o empaquetado da app:** <https://yunohost.org/packaging_apps>
+**Informazio gehiago aplikazioaren paketatzeari buruz:** <https://yunohost.org/packaging_apps>
