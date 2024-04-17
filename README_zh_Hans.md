@@ -1,31 +1,31 @@
 <!--
-Nota bene : ce README est automatiquement généré par <https://github.com/YunoHost/apps/tree/master/tools/readme_generator>
-Il NE doit PAS être modifié à la main.
+注意：此 README 由 <https://github.com/YunoHost/apps/tree/master/tools/readme_generator> 自动生成
+请勿手动编辑。
 -->
 
-# Nomad pour YunoHost
+# YunoHost 的 Nomad
 
-[![Niveau d’intégration](https://dash.yunohost.org/integration/nomad.svg)](https://dash.yunohost.org/appci/app/nomad) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/nomad.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/nomad.maintain.svg)
+[![集成程度](https://dash.yunohost.org/integration/nomad.svg)](https://dash.yunohost.org/appci/app/nomad) ![工作状态](https://ci-apps.yunohost.org/ci/badges/nomad.status.svg) ![维护状态](https://ci-apps.yunohost.org/ci/badges/nomad.maintain.svg)
 
-[![Installer Nomad avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=nomad)
+[![使用 YunoHost 安装 Nomad](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=nomad)
 
-*[Lire le README dans d'autres langues.](./ALL_README.md)*
+*[阅读此 README 的其它语言版本。](./ALL_README.md)*
 
-> *Ce package vous permet d’installer Nomad rapidement et simplement sur un serveur YunoHost.*  
-> *Si vous n’avez pas YunoHost, consultez [ce guide](https://yunohost.org/install) pour savoir comment l’installer et en profiter.*
+> *通过此软件包，您可以在 YunoHost 服务器上快速、简单地安装 Nomad。*  
+> *如果您还没有 YunoHost，请参阅[指南](https://yunohost.org/install)了解如何安装它。*
 
-## Vue d’ensemble
+## 概况
 
 Nomad is a simple and flexible workload orchestrator to deploy and manage containers ([docker](https://www.nomadproject.io/docs/drivers/docker.html), [podman](https://www.nomadproject.io/docs/drivers/podman)), non-containerized applications ([executable](https://www.nomadproject.io/docs/drivers/exec.html), [Java](https://www.nomadproject.io/docs/drivers/java)), and virtual machines ([qemu](https://www.nomadproject.io/docs/drivers/qemu.html)) across on-prem and clouds at scale.
 
 
-**Version incluse :** 1.7.7~ynh1
+**分发版本：** 1.7.7~ynh1
 
-## Captures d’écran
+## 截图
 
-![Capture d’écran de Nomad](./doc/screenshots/assets.png)
+![Nomad 的截图](./doc/screenshots/assets.png)
 
-## Avertissements / informations importantes
+## 免责声明 / 重要信息
 
 ## Some Nomad Job examples
 
@@ -201,24 +201,24 @@ job "job-download-bullseye" {
 }
 ```
 
-## Documentations et ressources
+## 文档与资源
 
-- Site officiel de l’app : <https://www.nomadproject.io/>
-- Documentation officielle de l’admin : <https://www.nomadproject.io/docs>
-- Dépôt de code officiel de l’app : <https://github.com/hashicorp/nomad>
-- YunoHost Store : <https://apps.yunohost.org/app/nomad>
-- Signaler un bug : <https://github.com/YunoHost-Apps/nomad_ynh/issues>
+- 官方应用网站： <https://www.nomadproject.io/>
+- 官方管理文档： <https://www.nomadproject.io/docs>
+- 上游应用代码库： <https://github.com/hashicorp/nomad>
+- YunoHost 商店： <https://apps.yunohost.org/app/nomad>
+- 报告 bug： <https://github.com/YunoHost-Apps/nomad_ynh/issues>
 
-## Informations pour les développeurs
+## 开发者信息
 
-Merci de faire vos pull request sur la [branche `testing`](https://github.com/YunoHost-Apps/nomad_ynh/tree/testing).
+请向 [`testing` 分支](https://github.com/YunoHost-Apps/nomad_ynh/tree/testing) 发送拉取请求。
 
-Pour essayer la branche `testing`, procédez comme suit :
+如要尝试 `testing` 分支，请这样操作：
 
 ```bash
 sudo yunohost app install https://github.com/YunoHost-Apps/nomad_ynh/tree/testing --debug
-ou
+或
 sudo yunohost app upgrade nomad -u https://github.com/YunoHost-Apps/nomad_ynh/tree/testing --debug
 ```
 
-**Plus d’infos sur le packaging d’applications :** <https://yunohost.org/packaging_apps>
+**有关应用打包的更多信息：** <https://yunohost.org/packaging_apps>
