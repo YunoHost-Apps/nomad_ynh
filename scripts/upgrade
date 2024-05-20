@@ -5,7 +5,6 @@
 #=================================================
 
 source _common.sh
-source ynh_install_go
 source /usr/share/yunohost/helpers
 
 #=================================================
@@ -16,13 +15,9 @@ ynh_script_progression --message="Stopping $app's systemd service..." --weight=1
 ynh_systemd_action --service_name="$app" --action="stop" --log_path="/var/log/$app/$app.log"
 
 #=================================================
-# ENSURE DOWNWARD COMPATIBILITY
-#=================================================
-# ynh_script_progression --message="Ensuring downward compatibility..." --weight=1
-
-#=================================================
 # BUILD DRIVERS
 #=================================================
+
 if [ "$node_type" == "client" ] && [ "$driver_lxc" -eq 1 ]; then
     ynh_script_progression --message="Installing Go..."
     ynh_exec_warn_less ynh_install_go --go_version="$go_version"
