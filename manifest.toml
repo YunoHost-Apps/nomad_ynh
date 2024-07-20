@@ -7,7 +7,7 @@ name = "Nomad"
 description.en = "Simple and flexible workload orchestrator"
 description.fr = "Orchestrateur de charge de travail simple et flexible"
 
-version = "1.7.7~ynh2"
+version = "1.7.7~ynh3"
 
 maintainers = []
 
@@ -19,7 +19,7 @@ code = "https://github.com/hashicorp/nomad"
 cpe = "cpe:2.3:a:hashicorp:nomad"
 
 [integration]
-yunohost = ">= 11.2.12"
+yunohost = ">= 11.2.20"
 architectures = "all"
 multi_instance = false
 ldap = "not_relevant"
