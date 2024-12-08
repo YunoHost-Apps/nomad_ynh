@@ -5,7 +5,9 @@
 
 # YunoHost 上的 Nomad
 
-[![集成程度](https://dash.yunohost.org/integration/nomad.svg)](https://ci-apps.yunohost.org/ci/apps/nomad/) ![工作状态](https://ci-apps.yunohost.org/ci/badges/nomad.status.svg) ![维护状态](https://ci-apps.yunohost.org/ci/badges/nomad.maintain.svg)
+[![集成程度](https://apps.yunohost.org/badge/integration/nomad)](https://ci-apps.yunohost.org/ci/apps/nomad/)
+![工作状态](https://apps.yunohost.org/badge/state/nomad)
+![维护状态](https://apps.yunohost.org/badge/maintained/nomad)
 
 [![使用 YunoHost 安装 Nomad](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=nomad)
 

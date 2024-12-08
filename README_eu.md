@@ -5,7 +5,9 @@ EZ editatu eskuz.
 
 # Nomad YunoHost-erako
 
-[![Integrazio maila](https://dash.yunohost.org/integration/nomad.svg)](https://ci-apps.yunohost.org/ci/apps/nomad/) ![Funtzionamendu egoera](https://ci-apps.yunohost.org/ci/badges/nomad.status.svg) ![Mantentze egoera](https://ci-apps.yunohost.org/ci/badges/nomad.maintain.svg)
+[![Integrazio maila](https://apps.yunohost.org/badge/integration/nomad)](https://ci-apps.yunohost.org/ci/apps/nomad/)
+![Funtzionamendu egoera](https://apps.yunohost.org/badge/state/nomad)
+![Mantentze egoera](https://apps.yunohost.org/badge/maintained/nomad)
 
 [![Instalatu Nomad YunoHost-ekin](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=nomad)
 

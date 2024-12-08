@@ -5,7 +5,9 @@ NON debe editarse manualmente.
 
 # Nomad para YunoHost
 
-[![Nivel de integración](https://dash.yunohost.org/integration/nomad.svg)](https://ci-apps.yunohost.org/ci/apps/nomad/) ![Estado de funcionamento](https://ci-apps.yunohost.org/ci/badges/nomad.status.svg) ![Estado de mantemento](https://ci-apps.yunohost.org/ci/badges/nomad.maintain.svg)
+[![Nivel de integración](https://apps.yunohost.org/badge/integration/nomad)](https://ci-apps.yunohost.org/ci/apps/nomad/)
+![Estado de funcionamento](https://apps.yunohost.org/badge/state/nomad)
+![Estado de mantemento](https://apps.yunohost.org/badge/maintained/nomad)
 
 [![Instalar Nomad con YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=nomad)
 

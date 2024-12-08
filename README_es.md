@@ -5,7 +5,9 @@ No se debe editar a mano.
 
 # Nomad para Yunohost
 
-[![Nivel de integración](https://dash.yunohost.org/integration/nomad.svg)](https://ci-apps.yunohost.org/ci/apps/nomad/) ![Estado funcional](https://ci-apps.yunohost.org/ci/badges/nomad.status.svg) ![Estado En Mantención](https://ci-apps.yunohost.org/ci/badges/nomad.maintain.svg)
+[![Nivel de integración](https://apps.yunohost.org/badge/integration/nomad)](https://ci-apps.yunohost.org/ci/apps/nomad/)
+![Estado funcional](https://apps.yunohost.org/badge/state/nomad)
+![Estado En Mantención](https://apps.yunohost.org/badge/maintained/nomad)
 
 [![Instalar Nomad con Yunhost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=nomad)
 
@@ -35,7 +37,7 @@ Nomad is a simple and flexible workload orchestrator to deploy and manage contai
 
 ## Información para desarrolladores
 
-Por favor enviar sus correcciones a la [`branch testing`](https://github.com/YunoHost-Apps/nomad_ynh/tree/testing
+Por favor enviar sus correcciones a la [rama `testing`](https://github.com/YunoHost-Apps/nomad_ynh/tree/testing).
 
 Para probar la rama `testing`, sigue asÍ:
 
