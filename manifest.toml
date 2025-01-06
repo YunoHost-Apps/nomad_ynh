@@ -22,8 +22,10 @@ cpe = "cpe:2.3:a:hashicorp:nomad"
 yunohost = ">= 11.2.20"
 architectures = "all"
 multi_instance = false
+
 ldap = "not_relevant"
 sso = "not_relevant"
+
 disk = "300M"
 ram.build = "100M"
 ram.runtime = "50M"
