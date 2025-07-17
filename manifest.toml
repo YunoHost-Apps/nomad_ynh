@@ -19,7 +19,7 @@ code = "https://github.com/hashicorp/nomad"
 cpe = "cpe:2.3:a:hashicorp:nomad"
 
 [integration]
-yunohost = ">= 11.2.20"
+yunohost = ">= 12.0.12"
 architectures = "all"
 multi_instance = false
 
@@ -105,6 +105,6 @@ ram.runtime = "50M"
     """
 
     [resources.apt.extras.nomad]
-    repo = "deb https://apt.releases.hashicorp.com bullseye main"
+    repo = "deb https://apt.releases.hashicorp.com bookworm main"
     key = "https://apt.releases.hashicorp.com/gpg"
     packages = ["nomad"]
