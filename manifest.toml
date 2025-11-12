@@ -19,7 +19,7 @@ code = "https://github.com/hashicorp/nomad"
 cpe = "cpe:2.3:a:hashicorp:nomad"
 
 [integration]
-yunohost = ">= 12.0.12"
+yunohost = ">= 12.1.17"
 helpers_version = "2.1"
 architectures = "all"
 multi_instance = false
@@ -108,3 +108,6 @@ ram.runtime = "50M"
     repo = "deb https://apt.releases.hashicorp.com bookworm main"
     key = "https://apt.releases.hashicorp.com/gpg"
     packages = ["nomad"]
+
+    [resources.go]
+    version = "1.24.3"

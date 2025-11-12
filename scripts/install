@@ -4,7 +4,6 @@
 # IMPORT GENERIC HELPERS
 #=================================================
 
-source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
@@ -29,9 +28,8 @@ chown -R "$app:$app" "$data_dir"
 #=================================================
 # BUILD DRIVERS
 #=================================================
+
 if [ "$node_type" == "client" ] && [ "$driver_lxc" -eq 1 ]; then
-    ynh_script_progression "Installing Go..."
-    ynh_go_install
 
     ynh_script_progression "Building LXC driver..."
     ynh_setup_source --dest_dir="$install_dir/driver_lxc" --source_id="driver_lxc"
@@ -93,6 +91,7 @@ case "$node_type" in
     client) systemd_user="root" ;;
     server) systemd_user="$app" ;;
 esac
+
 ynh_config_add_systemd
 yunohost service add "$app" --log="/var/log/$app/$app.log" --needs_exposed_ports "$port_rpc" "$port_serf"
 

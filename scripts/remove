@@ -4,7 +4,6 @@
 # IMPORT GENERIC HELPERS
 #=================================================
 
-source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
@@ -23,6 +22,7 @@ ynh_script_progression "Removing system configurations related to $app..."
 if ynh_hide_warnings yunohost service status "$app" >/dev/null; then
     yunohost service remove "$app"
 fi
+
 # Remove the dedicated systemd config
 ynh_config_remove_systemd
 
@@ -41,14 +41,6 @@ if [ "$node_type" == "client" ] && [ "$driver_lxc" -eq 1 ]; then
     ynh_safe_rm "/etc/lxc/default.conf"
     ynh_safe_rm "/etc/dnsmasq.d/lxd"
     systemctl restart dnsmasq
-fi
-
-#=================================================
-# REMOVE DEPENDENCIES
-#=================================================
-if [ "$node_type" == "client" ] && [ "$driver_lxc" -eq 1 ]; then
-    ynh_script_progression "Removing Go..."
-    ynh_go_remove
 fi
 
 #=================================================
