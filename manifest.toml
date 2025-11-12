@@ -87,7 +87,6 @@ ram.runtime = "50M"
 
     [resources.ports]
     main.default = 4646
-
     rpc.default = 4647
     rpc.fixed = true
     rpc.exposed = "TCP"
