@@ -95,14 +95,14 @@ ram.runtime = "50M"
     serf.exposed = "TCP"
 
     [resources.apt]
-    packages = []
-    packages_from_raw_bash = """
-        if [ "$node_type" == "client" ]; then
-            if [ "$driver_lxc" -eq 1 ]; then
-                echo pkg-config lxc-dev lxc lxc-templates;
-            fi
-        fi
-    """
+  #  packages = []
+  #  packages_from_raw_bash = """
+  #      if [ "$node_type" == "client" ]; then
+  #          if [ "$driver_lxc" -eq 1 ]; then
+  #              echo pkg-config lxc-dev lxc lxc-templates;
+  #          fi
+  #      fi
+  #  """
 
     [resources.apt.extras.nomad]
     repo = "deb https://apt.releases.hashicorp.com bookworm main"
