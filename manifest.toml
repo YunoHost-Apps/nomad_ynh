@@ -95,7 +95,7 @@ ram.runtime = "50M"
     serf.exposed = "TCP"
 
     [resources.apt]
-  #  packages = []
+    packages = [ "pkg-config", "lxc-dev", "lxc", "lxc-templates" ]
   #  packages_from_raw_bash = """
   #      if [ "$node_type" == "client" ]; then
   #          if [ "$driver_lxc" -eq 1 ]; then
