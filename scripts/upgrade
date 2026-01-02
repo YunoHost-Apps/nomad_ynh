@@ -17,9 +17,6 @@ ynh_systemctl --service="$app" --action="stop"
 # BUILD DRIVERS
 #=================================================
 if [ "$node_type" == "client" ] && [ "$driver_lxc" -eq 1 ]; then
-    ynh_script_progression "Installing Go..."
-    ynh_go_install
-
     ynh_script_progression "Building LXC driver..."
     ynh_setup_source --dest_dir="$install_dir/driver_lxc" --source_id="driver_lxc"
     pushd "$install_dir/driver_lxc"
