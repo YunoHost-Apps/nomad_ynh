@@ -7,7 +7,7 @@ name = "Nomad"
 description.en = "Simple and flexible workload orchestrator"
 description.fr = "Orchestrateur de charge de travail simple et flexible"
 
-version = "1.7.7~ynh3"
+version = "1.10.4~ynh1"
 
 maintainers = []
 
@@ -19,11 +19,13 @@ code = "https://github.com/hashicorp/nomad"
 cpe = "cpe:2.3:a:hashicorp:nomad"
 
 [integration]
-yunohost = ">= 11.2.20"
+yunohost = ">= 12.0.12"
 architectures = "all"
 multi_instance = false
+
 ldap = "not_relevant"
 sso = "not_relevant"
+
 disk = "300M"
 ram.build = "100M"
 ram.runtime = "50M"
@@ -93,16 +95,9 @@ ram.runtime = "50M"
     serf.exposed = "TCP"
 
     [resources.apt]
-    packages = []
-    packages_from_raw_bash = """
-        if [ "$node_type" == "client" ]; then
-            if [ "$driver_lxc" -eq 1 ]; then
-                echo pkg-config lxc-dev lxc lxc-templates
-            fi
-        fi
-    """
+    packages = [ "pkg-config", "lxc-dev", "lxc", "lxc-templates" ]
 
     [resources.apt.extras.nomad]
-    repo = "deb https://apt.releases.hashicorp.com bullseye main"
+    repo = "deb https://apt.releases.hashicorp.com bookworm main"
     key = "https://apt.releases.hashicorp.com/gpg"
     packages = ["nomad"]
