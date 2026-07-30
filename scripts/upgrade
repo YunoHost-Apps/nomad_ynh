@@ -4,58 +4,48 @@
 # IMPORT GENERIC HELPERS
 #=================================================
 
-source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
 # STOP SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Stopping $app's systemd service..." --weight=1
+ynh_script_progression "Stopping $app's systemd service..."
 
-ynh_systemd_action --service_name="$app" --action="stop" --log_path="/var/log/$app/$app.log"
-
-#=================================================
-# ENSURE DOWNWARD COMPATIBILITY
-#=================================================
-# ynh_script_progression --message="Ensuring downward compatibility..." --weight=1
+ynh_systemctl --service="$app" --action="stop"
 
 #=================================================
 # BUILD DRIVERS
 #=================================================
 if [ "$node_type" == "client" ] && [ "$driver_lxc" -eq 1 ]; then
-    ynh_script_progression --message="Installing Go..."
-    ynh_exec_warn_less ynh_install_go --go_version="$go_version"
-    ynh_use_go
-
-    ynh_script_progression --message="Building LXC driver..."
+    ynh_script_progression "Building LXC driver..."
     ynh_setup_source --dest_dir="$install_dir/driver_lxc" --source_id="driver_lxc"
     pushd "$install_dir/driver_lxc"
         export GOPATH="$install_dir/driver_lxc/go"
         export GOCACHE="$install_dir/driver_lxc/.cache"
-        ynh_exec_warn_less "$ynh_go" build
+        ynh_hide_warnings go build
     popd
     mv -f "$install_dir/driver_lxc/nomad-driver-lxc" "$data_dir/plugins/nomad-driver-lxc"
-    ynh_secure_remove --file="$install_dir/driver_lxc"
+    ynh_safe_rm "$install_dir/driver_lxc"
 fi
 
 #=================================================
 # UPDATE A CONFIG FILE
 #=================================================
-ynh_script_progression --message="Updating a configuration file..." --weight=1
+ynh_script_progression "Updating configuration..."
 
 mkdir -p "$config_path"
 
-ynh_add_config --template="nomad.hcl" --destination="$config_path/nomad.hcl"
+ynh_config_add --template="nomad.hcl" --destination="$config_path/nomad.hcl"
 
 if [ "$node_type" == "server" ]; then
-    ynh_add_config --template="server.hcl" --destination="$config_path/server.hcl"
+    ynh_config_add --template="server.hcl" --destination="$config_path/server.hcl"
 fi
 
 if [ "$node_type" == "client" ]; then
-    ynh_add_config --template="client.hcl" --destination="$config_path/client.hcl"
+    ynh_config_add --template="client.hcl" --destination="$config_path/client.hcl"
 
     if [ "$driver_lxc" -eq 1 ]; then
-        ynh_add_config --template="driver-lxc.hcl" --destination="$config_path/driver-lxc.hcl"
+        ynh_config_add --template="driver-lxc.hcl" --destination="$config_path/driver-lxc.hcl"
     fi
 fi
 
@@ -65,31 +55,34 @@ chown -R "$app:$app" "$config_path"
 #=================================================
 # REAPPLY SYSTEM CONFIGURATIONS
 #=================================================
-ynh_script_progression --message="Upgrading system configurations related to $app..." --weight=1
+ynh_script_progression "Upgrading system configurations related to $app..."
 
 # Create a dedicated NGINX config
-ynh_add_nginx_config
+ynh_config_add_nginx
 
 # Create a dedicated systemd config
 case "$node_type" in
     client) systemd_user="root" ;;
     server) systemd_user="$app" ;;
 esac
-ynh_add_systemd_config
+ynh_config_add_systemd
 yunohost service add "$app" --log="/var/log/$app/$app.log" --needs_exposed_ports "$port_rpc" "$port_serf"
 
 # Use logrotate to manage app-specific logfile(s)
-ynh_use_logrotate --non-append
+ynh_config_add_logrotate
 
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Starting $app's systemd service..." --weight=1
+ynh_script_progression "Starting $app's systemd service..."
 
-ynh_systemd_action --service_name="$app" --action="start" --log_path="/var/log/$app/$app.log" --line_match="Nomad agent started"
+ynh_systemctl --service="$app" --action="start"  --wait_until="Nomad agent started"
+
+chmod -R go-rwx,u-w "$config_path"
+chown -R "$app:$app" "$config_path"
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Upgrade of $app completed" --last
+ynh_script_progression "Upgrade of $app completed"

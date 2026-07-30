@@ -4,7 +4,6 @@
 # IMPORT GENERIC HELPERS
 #=================================================
 
-source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
@@ -14,14 +13,14 @@ source /usr/share/yunohost/helpers
 client_lxc_bridge="lxcbr0"
 client_lxc_plage_ip="10.1.44"
 client_lxc_main_iface=$(ip route | grep default | awk '{print $5;}')
-ynh_app_setting_set --app="$app" --key=client_lxc_bridge --value="$client_lxc_bridge"
-ynh_app_setting_set --app="$app" --key=client_lxc_plage_ip --value="$client_lxc_plage_ip"
-ynh_app_setting_set --app="$app" --key=client_lxc_main_iface --value="$client_lxc_main_iface"
+ynh_app_setting_set --key=client_lxc_bridge --value="$client_lxc_bridge"
+ynh_app_setting_set --key=client_lxc_plage_ip --value="$client_lxc_plage_ip"
+ynh_app_setting_set --key=client_lxc_main_iface --value="$client_lxc_main_iface"
 
 #=================================================
 # CREATE DATA DIRECTORY
 #=================================================
-ynh_script_progression --message="Configuring the data directory..." --weight=1
+ynh_script_progression "Configuring the data directory..."
 
 chmod -R o-rwx "$data_dir"
 chown -R "$app:$app" "$data_dir"
@@ -29,52 +28,50 @@ chown -R "$app:$app" "$data_dir"
 #=================================================
 # BUILD DRIVERS
 #=================================================
-if [ "$node_type" == "client" ] && [ "$driver_lxc" -eq 1 ]; then
-    ynh_script_progression --message="Installing Go..."
-    ynh_exec_warn_less ynh_install_go --go_version="$go_version"
-    ynh_use_go
 
-    ynh_script_progression --message="Building LXC driver..."
+if [ "$node_type" == "client" ] && [ "$driver_lxc" -eq 1 ]; then
+
+    ynh_script_progression "Building LXC driver..."
     ynh_setup_source --dest_dir="$install_dir/driver_lxc" --source_id="driver_lxc"
     pushd "$install_dir/driver_lxc"
         export GOPATH="$install_dir/driver_lxc/go"
         export GOCACHE="$install_dir/driver_lxc/.cache"
-        ynh_exec_warn_less "$ynh_go" build
+        ynh_hide_warnings go build
     popd
     mv -f "$install_dir/driver_lxc/nomad-driver-lxc" "$data_dir/plugins/nomad-driver-lxc"
-    ynh_secure_remove --file="$install_dir/driver_lxc"
+    ynh_safe_rm "$install_dir/driver_lxc"
 fi
 
 #=================================================
 # ADD A CONFIGURATION
 #=================================================
-ynh_script_progression --message="Adding a configuration file..." --weight=1
+ynh_script_progression "Adding $app's configuration..."
 
 config_path=/etc/$app.d
-ynh_app_setting_set --app="$app" --key=config_path --value="$config_path"
+ynh_app_setting_set --key=config_path --value="$config_path"
 
 mkdir -p "$config_path"
 
-ynh_add_config --template="nomad.hcl" --destination="$config_path/nomad.hcl"
+ynh_config_add --template="nomad.hcl" --destination="$config_path/nomad.hcl"
 
 if [ "$node_type" == "server" ]; then
-    ynh_add_config --template="server.hcl" --destination="$config_path/server.hcl"
+    ynh_config_add --template="server.hcl" --destination="$config_path/server.hcl"
 fi
 
 if [ "$node_type" == "client" ]; then
-    ynh_add_config --template="client.hcl" --destination="$config_path/client.hcl"
+    ynh_config_add --template="client.hcl" --destination="$config_path/client.hcl"
 
     if [ "$driver_lxc" -eq 1 ]; then
-        ynh_add_config --template="driver-lxc.hcl" --destination="$config_path/driver-lxc.hcl"
-        ynh_add_config --template="dnsmasq-lxd" --destination="/etc/dnsmasq.d/lxd"
+        ynh_config_add --template="driver-lxc.hcl" --destination="$config_path/driver-lxc.hcl"
+        ynh_config_add --template="dnsmasq-lxd" --destination="/etc/dnsmasq.d/lxd"
         systemctl restart dnsmasq
 
-        if [ ! "${PACKAGE_CHECK_EXEC:-0}" -eq 1 ]; then
-            ynh_add_config --template="lxc-net" --destination="/etc/default/lxc-net"
+        if ynh_in_ci_tests; then
+            ynh_config_add --template="lxc-net" --destination="/etc/default/lxc-net"
         fi
-        ynh_add_config --template="default.conf" --destination="/etc/lxc/default.conf"
+        ynh_config_add --template="default.conf" --destination="/etc/lxc/default.conf"
         systemctl enable lxc-net --quiet
-        ynh_systemd_action --service_name=lxc-net --action="restart" --line_match="Finished LXC network bridge setup" --log_path="systemd"
+        ynh_systemctl --service=lxc-net --action="restart" --wait_until="Finished LXC network bridge setup" --log_path="systemd"
     fi
 fi
 
@@ -84,32 +81,36 @@ chown -R "$app:$app" "$config_path"
 #=================================================
 # SYSTEM CONFIGURATION
 #=================================================
-ynh_script_progression --message="Adding system configurations related to $app..." --weight=1
+ynh_script_progression "Adding system configurations related to $app..."
 
 # Create a dedicated NGINX config
-ynh_add_nginx_config
+ynh_config_add_nginx
 
 # Create a dedicated systemd config
 case "$node_type" in
     client) systemd_user="root" ;;
     server) systemd_user="$app" ;;
 esac
-ynh_add_systemd_config
+
+ynh_config_add_systemd
 yunohost service add "$app" --log="/var/log/$app/$app.log" --needs_exposed_ports "$port_rpc" "$port_serf"
 
 # Use logrotate to manage application logfile(s)
-ynh_use_logrotate
+ynh_config_add_logrotate
 
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Starting a systemd service..." --weight=1
+ynh_script_progression "Starting $app's systemd service..."
 
 # Start a systemd service
-ynh_systemd_action --service_name="$app" --action="start" --log_path="/var/log/$app/$app.log" --line_match="Nomad agent started"
+ynh_systemctl --service="$app" --action="start" --wait_until="Nomad agent started"
+
+chmod -R go-rwx,u-w "$config_path"
+chown -R "$app:$app" "$config_path"
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Installation of $app completed" --last
+ynh_script_progression "Installation of $app completed"
