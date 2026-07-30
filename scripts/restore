@@ -72,6 +72,9 @@ ynh_script_progression "Reloading NGINX web server and $app's service..."
 
 ynh_systemctl --service="$app" --action="start"  --wait_until="Nomad agent started"
 
+chmod -R go-rwx,u-w "$config_path"
+chown -R "$app:$app" "$config_path"
+
 ynh_systemctl --service=nginx --action=reload
 
 #=================================================
