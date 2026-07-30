@@ -4,7 +4,6 @@
 # IMPORT GENERIC HELPERS
 #=================================================
 
-source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
@@ -41,14 +40,6 @@ if [ "$node_type" == "client" ] && [ "$driver_lxc" -eq 1 ]; then
     ynh_secure_remove --file="/etc/lxc/default.conf"
     ynh_secure_remove --file="/etc/dnsmasq.d/lxd"
     systemctl restart dnsmasq
-fi
-
-#=================================================
-# REMOVE DEPENDENCIES
-#=================================================
-if [ "$node_type" == "client" ] && [ "$driver_lxc" -eq 1 ]; then
-    ynh_script_progression --message="Removing Go..." --weight=1
-    ynh_remove_go
 fi
 
 #=================================================
