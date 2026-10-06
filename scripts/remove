@@ -49,7 +49,7 @@ fi
 ynh_script_progression "Removing various files..."
 
 # Remove a directory securely
-ynh_safe_rm "$config_path"
+ynh_safe_rm "/etc/$app.d"
 
 #=================================================
 # END OF SCRIPT

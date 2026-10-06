@@ -20,13 +20,12 @@ ynh_script_progression "Restoring the data directory..."
 
 ynh_restore "$data_dir"
 
-chown -R "$app:$app" "$data_dir"
-
 #=================================================
 # RESTORE VARIOUS FILES
 #=================================================
 ynh_script_progression "Restoring various files..."
 
+config_path=/etc/$app.d
 ynh_restore "$config_path"
 
 chmod -R go-rwx,u-w "$config_path"
@@ -70,7 +69,7 @@ ynh_restore "/var/log/$app/"
 #=================================================
 ynh_script_progression "Reloading NGINX web server and $app's service..."
 
-ynh_systemctl --service="$app" --action="start"  --wait_until="Nomad agent started"
+ynh_systemctl --service="$app" --action="start" --wait_until="Nomad agent started"
 
 chmod -R go-rwx,u-w "$config_path"
 chown -R "$app:$app" "$config_path"

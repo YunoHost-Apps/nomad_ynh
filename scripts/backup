@@ -34,7 +34,7 @@ ynh_backup "/etc/logrotate.d/$app"
 # BACKUP VARIOUS FILES
 #=================================================
 
-ynh_backup "$config_path"
+ynh_backup "/etc/$app.d"
 
 ynh_backup "/var/log/$app/"
 

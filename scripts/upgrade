@@ -16,6 +16,7 @@ ynh_systemctl --service="$app" --action="stop"
 #=================================================
 # BUILD DRIVERS
 #=================================================
+
 if [ "$node_type" == "client" ] && [ "$driver_lxc" -eq 1 ]; then
     ynh_script_progression "Building LXC driver..."
     ynh_setup_source --dest_dir="$install_dir/driver_lxc" --source_id="driver_lxc"
@@ -33,6 +34,7 @@ fi
 #=================================================
 ynh_script_progression "Updating configuration..."
 
+config_path=/etc/$app.d
 mkdir -p "$config_path"
 
 ynh_config_add --template="nomad.hcl" --destination="$config_path/nomad.hcl"
