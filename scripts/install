@@ -18,14 +18,6 @@ ynh_app_setting_set --key=client_lxc_plage_ip --value="$client_lxc_plage_ip"
 ynh_app_setting_set --key=client_lxc_main_iface --value="$client_lxc_main_iface"
 
 #=================================================
-# CREATE DATA DIRECTORY
-#=================================================
-ynh_script_progression "Configuring the data directory..."
-
-chmod -R o-rwx "$data_dir"
-chown -R "$app:$app" "$data_dir"
-
-#=================================================
 # BUILD DRIVERS
 #=================================================
 
@@ -104,10 +96,7 @@ ynh_config_add_logrotate
 ynh_script_progression "Starting $app's systemd service..."
 
 # Start a systemd service
-ynh_systemctl --service="$app" --action="start" --wait_until="Nomad agent started"
-
-chmod -R go-rwx,u-w "$config_path"
-chown -R "$app:$app" "$config_path"
+ynh_systemctl --service="$app" --action="start"
 
 #=================================================
 # END OF SCRIPT

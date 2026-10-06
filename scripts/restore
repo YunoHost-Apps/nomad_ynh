@@ -28,9 +28,6 @@ ynh_script_progression "Restoring various files..."
 config_path=/etc/$app.d
 ynh_restore "$config_path"
 
-chmod -R go-rwx,u-w "$config_path"
-chown -R "$app:$app" "$config_path"
-
 if [ "$node_type" == "client" ]; then
     if [ "$driver_lxc" -eq 1 ]; then
         client_lxc_main_iface=$(ip route | grep default | awk '{print $5;}')
@@ -49,6 +46,9 @@ if [ "$node_type" == "client" ]; then
     fi
 fi
 
+chmod -R go-rwx,u-w "$config_path"
+chown -R "$app:$app" "$config_path"
+
 #=================================================
 # RESTORE SYSTEM CONFIGURATIONS
 #=================================================
@@ -58,6 +58,7 @@ ynh_restore "/etc/nginx/conf.d/$domain.d/$app.conf"
 
 ynh_restore "/etc/systemd/system/$app.service"
 systemctl enable "$app.service" --quiet
+
 yunohost service add "$app" --log="/var/log/$app/$app.log" --needs_exposed_ports "$port_rpc" "$port_serf"
 
 ynh_restore "/etc/logrotate.d/$app"
@@ -70,9 +71,6 @@ ynh_restore "/var/log/$app/"
 ynh_script_progression "Reloading NGINX web server and $app's service..."
 
 ynh_systemctl --service="$app" --action="start" --wait_until="Nomad agent started"
-
-chmod -R go-rwx,u-w "$config_path"
-chown -R "$app:$app" "$config_path"
 
 ynh_systemctl --service=nginx --action=reload
 
